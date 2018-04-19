@@ -1,0 +1,165 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */options{  static = false;}PARSER_BEGIN(Fun)package parser;
+
+public class Fun{  public static void main(String args []) throws ParseException  {    Fun parser = new Fun(System.in);    while (true)    {      System.out.println("Reading from standard input...");      System.out.print("Enter an expression like \"1+(2+3)*4;\" :");      try      {        switch (Fun.one_line())        {          case 0 :           System.out.println("OK.");          break;          case 1 :           System.out.println("Goodbye.");          break;          default :           break;        }      }      catch (Exception e)      {        System.out.println("NOK.");        System.out.println(e.getMessage());        Fun.ReInit(System.in);      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        break;      }    }  }}PARSER_END(Fun)
+TOKEN_MGR_DECLS :
+{
+	int countLexError = 0;
+
+	public int foundLexError()
+	{
+	  return countLexError;	}}
+
+SKIP:
+{
+  "/*" : multilinecomment
+| 
+  "//" : singlelinecomment
+}
+
+<singlelinecomment> SKIP:
+{
+  <["\n","\r"]> : DEFAULT
+| <~[]>
+}
+
+<multilinecomment> SKIP:
+{
+  "*/" : DEFAULT
+| <~[]>}
+SKIP :{ " "
+| "\r"
+| "\t"
+| "\n"
+}
+/* Palavras Reservadas da Linguagem */TOKEN :{
+  < BREAK: "break" >
+| < CLASS: "class" >
+| < CONSTRUCTOR: "constructor" >
+| < CONSTANT: "constant" >
+| < ELSE: "else" >
+| < EXTENDS: "extends" >
+| < FOR: "for" >
+| < IF: "if" >
+| < INT: "int" >
+| < CHAR: "char" >
+| < BOOLEAN: "boolean" >
+| < NEW: "new" >
+| < PRINT: "print" >
+| < READ: "read" >
+| < RETURN: "return" >
+| < STRING: "string" >
+| < SUPER: "super" >}
+/* Operadores da Linguagem */
+TOKEN:
+{
+  < ASSIGN: "=" >
+| < GT: ">" >
+| < LT: "<" >
+| < EQ: "==" >
+| < LE: "<=" >
+| < GE: ">=" >
+| < NEQ: "!=" >
+| < PLUS: "+" >
+| < MINUS: "-" >
+| < MULTIPLY: "*" >
+| < DIVIDE: "/" >
+| < REM: "%" >
+| < XOR: "xor" >
+| < NOT: "not" >
+| < AND: "and" >
+| < OR: "or" >
+}
+
+/* Simbolos Especiais da Linguagem */
+TOKEN:
+{
+  < LPAREN: "(" >
+| < RPAREN: ")" >
+| < LBRACE: "{" >
+| < RBRACE: "}" >
+| < LBRACKET: "[" >
+| < RBRACKET: "]" >
+| < SEMICOLON: ";" >
+| < COMMA: "," >
+| < DOT: "." >}
+
+/* Constantes da Linguagem */
+TOKEN:
+{
+  < int_constant:( //números decimais,octais, hexadeciamais ou binários
+    			  (["0"-"9"] (["0"-"9"])*) |
+    			  (["0"-"7"] (["0"-"7"])* (["o", "0"]) |
+    			  (["0"-"9"] (["0"-"7","A"-"F","a"-"f"])* ["h", "H"] ) |
+    			  (["0"-"1"] (["0"-"1"])* ["b", "B"])
+    			  ))> |   <  string_constant: //"constante string como "abcd"
+  		"\""( ~["\"","\n","\r"])* "\"" >
+|
+  < null_constant : "null" > // constant null
+|
+  < int_literal : < DIGIT >(< DIGIT >)* >
+|
+  < float_literal:	(< int_literal >) "." ( < int_literal > (( "e" | "E" ) ("-")?
+  < int_literal > )?)? |
+  						(< int_literal >)? "." (< int_literal > (( "e" | "E" ) ("-")?
+  						< int_literal > )? ) >
+|
+	< CHARACTER:(   (~["'"," ","\\","\n","\r"])
+			|	("\\"
+    				( ["n","t","b","r","f","\\","'","\""]
+    		| 		  ["u","U"]["+"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]
+    				)
+  				) )>}
+
+/* Identificadores da Linguagem */
+TOKEN:
+{
+  < IDENT: <LETTER> (<LETTER>|<DIGIT>)* >
+|
+  < #LETTER:["A"-"Z","a"-"z"] >
+|
+  < #DIGIT:["0"-"9"] >}
+
+SPECIAL_TOKEN:
+{
+<INVALID_LEXICAL:
+(~ ["a"-"z", "A"-"Z",
+	"0"-"9",
+	"\"",
+	"(",
+	")",
+	"[",
+	"]",
+	"{",
+	"}",
+	";",
+	",",
+	".",
+	"=",
+	">",
+	"<",
+	"!",
+	"+",
+	"-",
+	"*",
+	"/",
+	"%",
+	" ",
+	"\t",
+	"\n",
+	"\r",
+	"\f"
+])+ >
+	{
+	  System.err.println("Line " + input_stream.getEndLine() +
+	  					 " - Invalid string found: " + image);
+	  countLexError++;	}
+|
+	< INVALID_CONSTANT:
+	"\"" (~ ["\n","\r","\""])* ["\n","\r"]>
+	{
+	  System.err.println("Line " + input_stream.getEndLine() +
+	  					 " - String constant has a \\n: " + image);
+	  countLexError++;	}}
+int one_line() :{}{  sum() ";"  {    return 0;  }| ";"  {    return 1;  }}void sum() :{}{  term()  (    (      < PLUS >    | < MINUS >    )    term()  )*}void term() :{}{  unary()  (    (      < MULTIPLY >    | < DIVIDE >    )    unary()  )*}void unary() :{}{  < MINUS > element()| element()}void element() :{}{  < CONSTANT >| "(" sum() ")"}
