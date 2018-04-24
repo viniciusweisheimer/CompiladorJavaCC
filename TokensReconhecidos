@@ -1,0 +1,63 @@
+PALAVRAS RESERVADAS
+
+break x
+class x 
+constructor x
+constant x
+else x
+extends x
+for x
+if x
+int x
+char x 
+boolean x
+new x
+print x
+read x
+return x
+string x 
+super x
+//
+/*
+
+OPERADORES
+
+assign = x
+gt >
+lt < x
+eq == x
+le <= x
+neq != x
+plus + x
+minus - x
+multiply * x
+divide / x
+rem % x
+xor x
+not x
+and x 
+or x
+
+SIMBOLOS ESPECIAIS
+
+lparen ( x
+rparen ) x
+lbrace { x
+rbrace } x
+lbracket [
+rbracket ]
+semicolon ; x
+comma , x
+dot . x
+
+CONSTANTES
+
+int_constant x
+string_constant x
+null_constant x
+int_literal x
+float_literal x
+CHARACTER x
+
+
+
