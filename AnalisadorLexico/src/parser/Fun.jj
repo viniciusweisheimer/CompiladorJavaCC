@@ -1,15 +1,45 @@
 /**
  * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
- */options{  static = false;}PARSER_BEGIN(Fun)package parser;
+ */
+options
+{
+  static = false;
+}
 
-public class Fun{  public static void main(String args []) throws ParseException  {    Fun parser = new Fun(System.in);    while (true)    {      System.out.println("Reading from standard input...");      System.out.print("Enter an expression like \"1+(2+3)*4;\" :");      try      {        switch (Fun.one_line())        {          case 0 :           System.out.println("OK.");          break;          case 1 :           System.out.println("Goodbye.");          break;          default :           break;        }      }      catch (Exception e)      {        System.out.println("NOK.");        System.out.println(e.getMessage());        Fun.ReInit(System.in);      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        break;      }    }  }}PARSER_END(Fun)
+PARSER_BEGIN(Fun)
+package parser;
+
+PARSER_BEGIN(Fun)
+package parser;
+
+public class Fun
+{
+  public static void main(String args []) throws ParseException
+  {
+    Fun parser = new Fun(System.in);
+
+	try { 
+    	parser.program();
+    	System.out.println("Sucesso!");
+  	} catch (ParseException e) {
+  		System.out.println(e);
+  	} catch (TokenMgrError e) {
+  	  	System.out.println(e);
+  	}
+  }
+} // Fun
+
+PARSER_END(Fun)
+
 TOKEN_MGR_DECLS :
 {
 	int countLexError = 0;
 
 	public int foundLexError()
 	{
-	  return countLexError;	}}
+	  return countLexError;
+	}
+}
 
 SKIP:
 {
@@ -27,30 +57,53 @@ SKIP:
 <multilinecomment> SKIP:
 {
   "*/" : DEFAULT
-| <~[]>}
-SKIP :{ " "
+| <~[]>
+}
+
+SKIP:
+{
+ " "
 | "\r"
 | "\t"
 | "\n"
-}
-/* Palavras Reservadas da Linguagem */TOKEN :{
+}
+
+/* Palavras Reservadas da Linguagem */
+TOKEN:
+{
   < BREAK: "break" >
 | < CLASS: "class" >
 | < CONSTRUCTOR: "constructor" >
-| < CONSTANT: "constant" >
 | < ELSE: "else" >
 | < EXTENDS: "extends" >
 | < FOR: "for" >
 | < IF: "if" >
-| < INT: "int" >
-| < CHAR: "char" >
-| < BOOLEAN: "boolean" >
 | < NEW: "new" >
 | < PRINT: "print" >
 | < READ: "read" >
 | < RETURN: "return" >
-| < STRING: "string" >
-| < SUPER: "super" >}
+| < SUPER: "super" >
+}
+
+/* Tipos de Variáveis da Linguagem */
+TOKEN:
+{
+  < INT: "int" >
+| < STRING: "string >
+| < CHAR: "char" >
+| < DOUBLE: "double" >
+| < FLOAT: "float >
+}
+
+/* Qualificadores da Linguagem */
+TOKEN:
+{
+  < PUBLIC: "public" >
+| < PROTECTED: "protected" >
+| < PRIVATE: "private" >
+| < FINAL: "final" >
+}
+
 /* Operadores da Linguagem */
 TOKEN:
 {
@@ -66,6 +119,11 @@ TOKEN:
 | < MULTIPLY: "*" >
 | < DIVIDE: "/" >
 | < REM: "%" >
+}
+
+/* Operadores Lógicos */
+TOKEN:
+{
 | < XOR: "xor" >
 | < NOT: "not" >
 | < AND: "and" >
@@ -83,7 +141,8 @@ TOKEN:
 | < RBRACKET: "]" >
 | < SEMICOLON: ";" >
 | < COMMA: "," >
-| < DOT: "." >}
+| < DOT: "." >
+}
 
 /* Constantes da Linguagem */
 TOKEN:
@@ -93,7 +152,9 @@ TOKEN:
     			  (["0"-"7"] (["0"-"7"])* (["o", "0"]) |
     			  (["0"-"9"] (["0"-"7","A"-"F","a"-"f"])* ["h", "H"] ) |
     			  (["0"-"1"] (["0"-"1"])* ["b", "B"])
-    			  ))> |   <  string_constant: //"constante string como "abcd"
+    			  ))> 
+| 
+  <  string_constant: //"constante string como "abcd"
   		"\""( ~["\"","\n","\r"])* "\"" >
 |
   < null_constant : "null" > // constant null
@@ -110,7 +171,8 @@ TOKEN:
     				( ["n","t","b","r","f","\\","'","\""]
     		| 		  ["u","U"]["+"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]
     				)
-  				) )>}
+  				) )>
+}
 
 /* Identificadores da Linguagem */
 TOKEN:
@@ -119,7 +181,8 @@ TOKEN:
 |
   < #LETTER:["A"-"Z","a"-"z"] >
 |
-  < #DIGIT:["0"-"9"] >}
+  < #DIGIT:["0"-"9"] >
+}
 
 SPECIAL_TOKEN:
 {
@@ -154,12 +217,67 @@ SPECIAL_TOKEN:
 	{
 	  System.err.println("Line " + input_stream.getEndLine() +
 	  					 " - Invalid string found: " + image);
-	  countLexError++;	}
+	  countLexError++;
+	}
 |
 	< INVALID_CONSTANT:
 	"\"" (~ ["\n","\r","\""])* ["\n","\r"]>
 	{
 	  System.err.println("Line " + input_stream.getEndLine() +
 	  					 " - String constant has a \\n: " + image);
-	  countLexError++;	}}
-int one_line() :{}{  sum() ";"  {    return 0;  }| ";"  {    return 1;  }}void sum() :{}{  term()  (    (      < PLUS >    | < MINUS >    )    term()  )*}void term() :{}{  unary()  (    (      < MULTIPLY >    | < DIVIDE >    )    unary()  )*}void unary() :{}{  < MINUS > element()| element()}void element() :{}{  < CONSTANT >| "(" sum() ")"}
+	  countLexError++;
+	}
+}
+
+int one_line() :
+{}
+{
+  sum() ";"
+  {
+    return 0;
+  }
+| ";"
+  {
+    return 1;
+  }
+}
+
+void sum() :
+{}
+{
+  term()
+  (
+    (
+      < PLUS >
+    | < MINUS >
+    )
+    term()
+  )*
+}
+
+void term() :
+{}
+{
+  unary()
+  (
+    (
+      < MULTIPLY >
+    | < DIVIDE >
+    )
+    unary()
+  )*
+}
+
+void unary() :
+{}
+{
+  < MINUS > element()
+| element()
+}
+
+void element() :
+{}
+{
+  < CONSTANT >
+| "(" sum() ")"
+}
