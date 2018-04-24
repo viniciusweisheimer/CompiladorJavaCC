@@ -2,40 +2,84 @@
 package parser;
 
 public class Fun implements FunConstants {
+
+boolean Menosshort = false;
+
   public static void main(String args []) throws ParseException
   {
-    Fun parser = new Fun(System.in);
-    while (true)
-    {
-      System.out.println("Reading from standard input...");
-      System.out.print("Enter an expression like \u005c"1+(2+3)*4;\u005c" :");
-      try
-      {
-        switch (Fun.one_line())
-        {
-          case 0 :
-          System.out.println("OK.");
-          break;
-          case 1 :
-          System.out.println("Goodbye.");
-          break;
-          default :
-          break;
-        }
-      }
-      catch (Exception e)
-      {
-        System.out.println("NOK.");
-        System.out.println(e.getMessage());
-        Fun.ReInit(System.in);
-      }
-      catch (Error e)
-      {
-        System.out.println("Oops.");
-        System.out.println(e.getMessage());
-        break;
-      }
+    String filename = ""; // nome do arquivo a ser analisado;
+    Fun parser;
+    int i = 0;
+    boolean minusshort = false;
+    
+    // Lê os parametros passados ao compilador
+    while( i < args.length -1) {
+    	if(args[i].toLowerCase().equals("-short")) {
+    		minusshort = true;
+    	} else {
+    		System.out.println("Usage is: java Fun [-short] inputfile");
+    		System.exit(0);
+    	}
     }
+    
+    if (args[i].equals("-")) {
+    	// Lê Stdin
+    	System.out.println("Lendo da entrada padrao");
+    	parser = new Fun(System.in);
+    }
+    else
+    {
+    	// Lê do arquivo passado
+    	filename = args[args.length-1];
+    	System.out.println("Lendo do arquivo " + filename +"");
+    	try {
+    		parser = new Fun(new java.io.FileInputStream(filename));
+    	}
+    	catch (java.io.FileNotFoundException e) {
+    		System.out.println("Arquivo" + filename + " nao encontrado");
+    		return;
+    	}
+    }
+    parser.Menosshort = minusshort;
+    parser.program();
+    if(parser.token_source.foundLexError() != 0 ) // verifica erros lexicos
+    	System.out.println(parser.token_source.foundLexError() + 
+    			"Erros lexicos encontrados");
+    	else
+    		System.out.println("Programa analizado");
+  }
+
+  static public String image(int x) {
+	int k;
+	String s;
+		s = tokenImage[x];
+		k = s.lastIndexOf("\u005c"");
+		try {
+			s = s.substring(1, k);
+		} catch (StringIndexOutOfBoundsException e) {}
+	  return s;
+  }
+  
+  void program() throws ParseException {
+	  Token t;
+	  do {
+		  t = getNextToken();
+		  Token st = t;
+		  while( st.specialToken != null)
+			  st = st.specialToken;
+		  do {
+			  if (Menosshort)
+				  System.out.println(st.image + "  " +
+                          image(st.kind) + " " +
+                          st.kind);
+			  	else
+			  		System.out.println("Line: " + st.beginLine +
+                          " Column: " + st.beginColumn +
+                          " " + st.image +
+                          "  " + image(st.kind) + "  "+t.kind);
+			  st = st.next;
+		  } while (st != t.next);
+	  } while (t.kind != FunConstants.EOF);
   }
 
   final public int one_line() throws ParseException {

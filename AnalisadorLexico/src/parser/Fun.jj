@@ -8,26 +8,69 @@ options
 
 PARSER_BEGIN(Fun)
 package parser;
+import java.io.*;
 
 PARSER_BEGIN(Fun)
 package parser;
 
 public class Fun
 {
+boolean Menosshort = false;
+
   public static void main(String args []) throws ParseException
   {
-    Fun parser = new Fun(System.in);
+    String filename = ""; // nome do arquivo a ser analisado;
+    Fun parser;
+    int i = 0;
+    boolean minusshort = false;
+    
+    // Lê os parametros passados ao compilador
+    while( i < args.length -1) {
+    	if(args[i].toLowerCase().equals("-short")) {
+    		minusshort = true;
+    	} else {
+    		System.out.println("Usage is: java Fun [-short] inputfile");
+    		System.exit(0);
+    	}
+    }
+    
+    if (args[i].equals("-")) {
+    	// Lê Stdin
+    	System.out.println("Lendo da entrada padrao");
+    	parser = new Fun(System.in);
+    }
+    else
+    {
+    	// Lê do arquivo passado
+    	filename = args[args.length-1];
+    	System.out.println("Lendo do arquivo " + filename +"");
+    	try {
+    		parser = new Fun(new java.io.FileInputStream(filename));
+    	}
+    	catch (java.io.FileNotFoundException e) {
+    		System.out.println("Arquivo" + filename + " nao encontrado");
+    		return;
+    	}
+    }
+    parser.Menosshort = minusshort;
+    parser.program();
+    if(parser.token_source.foundLexError() != 0 ) // verifica erros lexicos
+    	System.out.println(parser.token_source.foundLexError() + 
+    			"Erros lexicos encontrados");
+    	else
+    		System.out.println("Programa analizado");
+}
 
-	try { 
-    	parser.program();
-    	System.out.println("Sucesso!");
-  	} catch (ParseException e) {
-  		System.out.println(e);
-  	} catch (TokenMgrError e) {
-  	  	System.out.println(e);
-  	}
-  }
-} // Fun
+  static public String image(int x) {
+	int k;
+	String s;
+		s = tokenImage[x];
+		k = s.lastIndexOf("\u005c"");
+		try {
+			s = s.substring(1, k);
+		} catch (StringIndexOutOfBoundsException e) {}
+	  return s;
+	}
 
 PARSER_END(Fun)
 
