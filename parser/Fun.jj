@@ -161,6 +161,7 @@ TOKEN:
 | < MULTIPLY: "*" >
 | < DIVIDE: "/" >
 | < REM: "%" >
+| < BOOLEAN: "true"|"false" >
 }
 
 /* Operadores Lógicos */
@@ -203,17 +204,20 @@ TOKEN:
 |
   < int_literal : < DIGIT >(< DIGIT >)* >
 |
-  < float_literal:	(< int_literal >) "." ( < int_literal > (( "e" | "E" ) ("-")?
-  < int_literal > )?)? |
-  						(< int_literal >)? "." (< int_literal > (( "e" | "E" ) ("-")?
-  						< int_literal > )? ) >
+//  < float_literal:	(< int_literal >) "." ( < int_literal > (( "e" | "E" ) ("-")?
+//  < int_literal > )?)? |
+//  						(< int_literal >)? "." (< int_literal > (( "e" | "E" ) ("-")?
+//  						< int_literal > )? >
+	< float_literal:	( < int_literal > ) "." ( < int_literal > ) >
 |
-	< CHARACTER:(   (~["'"," ","\\","\n","\r"])
+	< CHARACTER:(  (~["'"," ","\\","\n","\r"])
 			|	("\\"
     				( ["n","t","b","r","f","\\","'","\""]
     		| 		  ["u","U"]["+"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]
     				)
   				) )>
+|
+	< #EXPONENT: ["e","E"] (["+","-"])?  (["0"-"9"])+ >
 }
 
 /* Identificadores da Linguagem */
@@ -226,6 +230,12 @@ TOKEN:
   < #LETTER:["A"-"Z","a"-"z"] >
 |
   < #DIGIT:["0"-"9"] >
+}
+
+/* Tipos primitivos da Linguagem */
+TOKEN:
+{
+  < primitivetype: "int"|"char"|"boolean"|"float"|"not"|"and"|"or"|"xor" >
 }
 
 SPECIAL_TOKEN:
