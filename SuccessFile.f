@@ -1,4 +1,4 @@
-public class Success extends ErrorClass{
+public class SuccessClass extends ErrorClass{
 	
 	/* Declaracao variaveis, usando tipos e
 	* reconhecimento de comentários multiline
