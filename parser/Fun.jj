@@ -185,6 +185,7 @@ TOKEN:
 | < SEMICOLON: ";" >
 | < COMMA: "," >
 | < DOT: "." >
+| < SINGLE_QUOTATION_MARKS: "'" >
 }
 
 /* Constantes da Linguagem */
@@ -199,23 +200,29 @@ TOKEN:
 | 
   <  string_constant: //"constante string como "abcd"
   		"\""( ~["\"","\n","\r"])* "\"" >
+
 |
   < null_constant : "null" > // constant null
 |
   < int_literal : < DIGIT >(< DIGIT >)* >
 |
+
+//  Float que aceita notação ciêntifica
 //  < float_literal:	(< int_literal >) "." ( < int_literal > (( "e" | "E" ) ("-")?
 //  < int_literal > )?)? |
 //  						(< int_literal >)? "." (< int_literal > (( "e" | "E" ) ("-")?
 //  						< int_literal > )? >
+
 	< float_literal:	( < int_literal > ) "." ( < int_literal > ) >
 |
-	< CHARACTER:(  (~["'"," ","\\","\n","\r"])
-			|	("\\"
-    				( ["n","t","b","r","f","\\","'","\""]
-    		| 		  ["u","U"]["+"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]
-    				)
-  				) )>
+//	< CHARACTER:( (~[" ","\\","\n","\r"])
+//			|	("\\"
+//    				( ["n","t","b","r","f","\\","'","\""]
+//    		| 		  ["u","U"]["+"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]
+//    				) 
+//  				) )>
+
+	< CHARACTER: (["\'"])(["A"-"Z","a"-"z","0"-"9"])(["\'"]) ) >
 |
 	< #EXPONENT: ["e","E"] (["+","-"])?  (["0"-"9"])+ >
 }
