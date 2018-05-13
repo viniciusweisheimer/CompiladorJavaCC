@@ -30,7 +30,7 @@ int contParseError = 0;
 		// lê os parâmetros passados para o compilador
 		for (i = 0; i < args.length -1; i++)
 		{
-		  if(args.[i].equals("-debug_AS") )
+		  if(args[i].equals("-debug_AS") )
 		  		debug = true;
 		  else
 		  	{
@@ -47,8 +47,8 @@ int contParseError = 0;
 		}
 		else
 		{ // lê do arquivo
-			filename = args[args.length-1]
-			System.out.println("Lendo do arquivo " + filename + " ...");
+			filename = args[args.length-1];
+			System.out.println("Lendo arquivo " + filename + " ...");
 			try {
 				parser = new fun(new java.io.FileInputStream(filename));
 			}
@@ -75,7 +75,7 @@ int contParseError = 0;
 		  						"Syntatic Errors found");
 		  	}
 	} //main
-}
+
 
 static public String im(int x)
 {
@@ -242,7 +242,7 @@ TOKEN:
 //    				) 
 //  				) )>
 
-	< CHARACTER: (["\'"])(["A"-"Z","a"-"z","0"-"9"])(["\'"]) ) >
+	< CHARACTER: ( (["\'"])(["A"-"Z","a"-"z","0"-"9"])(["\'"]) ) >
 |
 	< #EXPONENT: ["e","E"] (["+","-"])?  (["0"-"9"])+ >
 }
@@ -310,60 +310,6 @@ SPECIAL_TOKEN:
 	}
 }
 
-int one_line() :
-{}
-{
-  sum() ";"
-  {
-    return 0;
-  }
-| ";"
-  {
-    return 1;
-  }
-}
-
-void sum() :
-{}
-{
-  term()
-  (
-    (
-      < PLUS >
-    | < MINUS >
-    )
-    term()
-  )*
-}
-
-void term() :
-{}
-{
-  unary()
-  (
-    (
-      < MULTIPLY >
-    | < DIVIDE >
-    )
-    unary()
-  )*
-}
-
-void unary() :
-{}
-{
-  < MINUS > element()
-| element()
-}
-
-void element() :
-{}
-{
-  < CONSTANT >
-| "(" sum() ")"
-}
-
-
 void program() :
 {
 }
@@ -386,23 +332,11 @@ void classdecl():
 	<CLASS>	<IDENT> [ <EXTENDS> <IDENT> ] classbody()
 }
 
-void classbody():
+void vardecl() :
 {
 }
 {
-	<LBRACE>
-		[classlist()]
-		(vardecl() <SEMICOLON>)*
-		(constructdecl())*
-		(methoddecl())*
-	<RBRACE>
-}
-
-void vardecl():
-{
-}
-{
-	(<INT< | <STRING> | <IDENT>)
+	(<INT> | <STRING> | <IDENT>)
 	<IDENT> (<LBRACKET> <RBRACKET>)*
 	(<COMMA> <IDENT> ( <RBRACKET> <LBRACKET>)* )*
 }
@@ -411,7 +345,7 @@ void constructdecl():
 {
 }
 {
-	<COSNTRUCTOR> methodbody()
+	<CONSTRUCTOR> methodbody()
 }
 
 void methoddecl():
@@ -428,13 +362,13 @@ void classbody():
 {
 	<LBRACE>
 		[classlist()]
-		(LOOKAHED(3) vardecl() <SEMICOLON>)*
+		(LOOKAHEAD(3) vardecl() <SEMICOLON>)*
 		(constructdecl())*
 		(methoddecl())*
 	<RBRACE>
 }
 
-void methodbody*(:
+void methodbody():
 {
 }
 {
@@ -481,11 +415,11 @@ void statement():
 	<SEMICOLON>
 }
 
-void atribstsat():
+void atribstat():
 {
 }
 {
-	lvalue() <ASSIGN> ( alocexpression() | expression())
+  	lvalue() <ASSIGN> ( alocexpression() | expression())
 }
 
 void printstat():
@@ -521,7 +455,7 @@ void ifstat():
 }
 {
 	<IF> <LPAREN> expression() <RPAREN> statement()
-	[LOOKAHEAD(1) <ESLE> statemenet()]
+	[LOOKAHEAD(1) <ELSE> statement()]
 }
 
 void forstat():
@@ -538,7 +472,7 @@ void statlist():
 {
 }
 {
-	statemenet() [statlist()]
+	statement() [statlist()]
 }
 
 void lvalue():
@@ -551,7 +485,7 @@ void lvalue():
 			)*
 }
 
-void alocpexpression():
+void alocexpression():
 {
 }
 {
@@ -580,7 +514,7 @@ void term():
 {
 }
 {
-	unaryexpr() ((<STAR> | <DIVIDE> | <REM>) unaryexpr())*
+	unaryexpr() ((<MULTIPLY> | <DIVIDE> | <REM>) unaryexpr())*
 }
 
 void unaryexpr():
