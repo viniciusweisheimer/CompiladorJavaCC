@@ -150,20 +150,12 @@ TOKEN:
 /* Tipos de Variáveis da Linguagem */
 TOKEN:
 {
-  < INT: "int" >
+  < PRIMITIVE_TYPE: (<INT> | <DOUBLE> | <FLOAT> | <STRING> | <CHAR> | <BOOLEAN>) >
+| < INT: "int" >
 | < STRING: "string" >
 | < CHAR: "char" >
 | < DOUBLE: "double" >
 | < FLOAT: "float" >
-}
-
-/* Qualificadores da Linguagem */
-TOKEN:
-{
-  < PUBLIC: "public" >
-| < PROTECTED: "protected" >
-| < PRIVATE: "private" >
-| < FINAL: "final" >
 }
 
 /* Operadores da Linguagem */
@@ -242,9 +234,11 @@ TOKEN:
 //    				) 
 //  				) )>
 
-	< CHARACTER: ( (["\'"])(["A"-"Z","a"-"z","0"-"9"])(["\'"]) ) >
-|
+//	< CHARACTER: ( (["\'"])(["A"-"Z","a"-"z","0"-"9"])(["\'"]) ) >
+
 	< #EXPONENT: ["e","E"] (["+","-"])?  (["0"-"9"])+ >
+|
+	< boolean_constant:("true"|"false") >
 }
 
 /* Identificadores da Linguagem */
@@ -257,12 +251,6 @@ TOKEN:
   < #LETTER:["A"-"Z","a"-"z"] >
 |
   < #DIGIT:["0"-"9"] >
-}
-
-/* Tipos primitivos da Linguagem */
-TOKEN:
-{
-  < primitivetype: "int"|"char"|"boolean"|"float"|"not"|"and"|"or"|"xor" >
 }
 
 SPECIAL_TOKEN:
@@ -336,9 +324,9 @@ void vardecl() :
 {
 }
 {
-	(<INT> | <STRING> | <IDENT>)
-	<IDENT> (<LBRACKET> <RBRACKET>)*
-	(<COMMA> <IDENT> ( <RBRACKET> <LBRACKET>)* )*
+	(<PRIMITIVE_TYPE > | <IDENT>)
+	(<LBRACKET> <RBRACKET>)* atribstat()
+	(<COMMA> atribstat())*
 }
 
 void constructdecl():
@@ -352,7 +340,7 @@ void methoddecl():
 {
 }
 {
-	(<INT> | <STRING> | <IDENT> ) (<RBRACKET> <LBRACKET>)*
+	(<PRIMITIVE_TYPE> | <IDENT>) (<RBRACKET> <LBRACKET>)*
 	<IDENT> methodbody()
 }
 
@@ -380,9 +368,9 @@ void paramlist():
 }
 {
   [
-  	( < INT > | < STRING > | < IDENT >) < IDENT > (< RBRACKET > <LBRACKET >)*
-  	( < COMMA > (< INT > | < STRING > | < IDENT >)
-  			< IDENT > (< RBRACKET > <LBRACKET >)*
+  	( <PRIMITIVE_TYPE> | < IDENT >) <IDENT> (<RBRACKET> <LBRACKET>)*
+  	( <COMMA> (<PRIMITIVE_TYPE> | <IDENT>)
+  			<IDENT> (<RBRACKET> <LBRACKET>)*
  	)*
   ]
 }
@@ -391,8 +379,8 @@ void statement():
 {
 }
 {
-	LOOKAHEAD(2)
-	vardecl()
+	LOOKAHEAD(3)
+	vardecl() <SEMICOLON>
 |
 	atribstat() <SEMICOLON>
 |
@@ -500,7 +488,8 @@ voi expression():
 {
 }
 {
-	numexpr() [( <LT> | <GT> | <LE> | <GE> | <EQ> | <NEQ>) numexpr()]
+	[<NOT>] numexpr() [( <LT> | <GT> | <LE> | <GE> | <EQ> | <NEQ>) numexpr()]
+		[(<AND>|<OR>|<XOR>) expression()]
 }
 
 void numexpr():
@@ -533,6 +522,7 @@ void factor():
 		<int_constant> |
 		<string_constant> |
 		<null_constant> |
+		<boolean_constant> |
 		lvalue() | 
 		<LPAREN> expression() <RPAREN>)
 }
