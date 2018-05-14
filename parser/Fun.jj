@@ -9,7 +9,7 @@ options
 
 PARSER_BEGIN(Fun)
 package parser;
-import java.io.FileInputStream;
+import java.io.*;
 
 public class Fun
 {
@@ -22,7 +22,7 @@ int contParseError = 0;
 	boolean debug = false;
 
 		String filename = "";
-		fun parser;
+		Fun parser;
 		int i;
 		boolean ms = false;
 
@@ -43,16 +43,16 @@ int contParseError = 0;
 		if (args[i].equals("-"))
 		{ //lê da entrada padrão
 			System.out.println("Lendo da entrada padrão ...");
-			parser = new fun(System.in); // cria AS
+			parser = new Fun(System.in); // cria AS
 		}
 		else
 		{ // lê do arquivo
 			filename = args[args.length-1];
 			System.out.println("Lendo arquivo " + filename + " ...");
 			try {
-				parser = new fun(new java.io.FileInputStream(filename));
+				parser = new Fun(new java.io.FileInputStream(filename));
 			}
-		  catch (java.io.FileNotFoundExcpetion e) {
+		  catch (java.io.FileNotFoundException e) {
 		    		System.out.println("Arquivo " + filename + " nao encontrado.");
 		    		return;
 		 			}
@@ -63,7 +63,7 @@ int contParseError = 0;
 		try {
 		  		parser.program(); //chama o método para fazer análise
 		}
-		catch (ParseExcpetion e)  	
+		catch (ParseException e)  	
 		{
 		System.err.println(e.getMessage());
 		parser.contParseError = 1; // não existe recuperação de erros
@@ -281,7 +281,12 @@ SPECIAL_TOKEN:
 	"\t",
 	"\n",
 	"\r",
-	"\f"
+	"\f",
+	"$",
+	".",
+	"\"",
+	"\'",
+	"\\"
 ])+ >
 	{
 	  System.err.println("Line " + input_stream.getEndLine() +
@@ -484,7 +489,7 @@ void alocexpression():
 		   )
 }
 
-voi expression():
+void expression():
 {
 }
 {

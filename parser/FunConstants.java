@@ -35,105 +35,97 @@ public interface FunConstants {
   /** RegularExpression Id. */
   int SUPER = 22;
   /** RegularExpression Id. */
-  int INT = 23;
+  int PRIMITIVE_TYPE = 23;
   /** RegularExpression Id. */
-  int STRING = 24;
+  int INT = 24;
   /** RegularExpression Id. */
-  int CHAR = 25;
+  int STRING = 25;
   /** RegularExpression Id. */
-  int DOUBLE = 26;
+  int CHAR = 26;
   /** RegularExpression Id. */
-  int FLOAT = 27;
+  int DOUBLE = 27;
   /** RegularExpression Id. */
-  int PUBLIC = 28;
+  int FLOAT = 28;
   /** RegularExpression Id. */
-  int PROTECTED = 29;
+  int ASSIGN = 29;
   /** RegularExpression Id. */
-  int PRIVATE = 30;
+  int GT = 30;
   /** RegularExpression Id. */
-  int FINAL = 31;
+  int LT = 31;
   /** RegularExpression Id. */
-  int ASSIGN = 32;
+  int EQ = 32;
   /** RegularExpression Id. */
-  int GT = 33;
+  int LE = 33;
   /** RegularExpression Id. */
-  int LT = 34;
+  int GE = 34;
   /** RegularExpression Id. */
-  int EQ = 35;
+  int NEQ = 35;
   /** RegularExpression Id. */
-  int LE = 36;
+  int PLUS = 36;
   /** RegularExpression Id. */
-  int GE = 37;
+  int MINUS = 37;
   /** RegularExpression Id. */
-  int NEQ = 38;
+  int MULTIPLY = 38;
   /** RegularExpression Id. */
-  int PLUS = 39;
+  int DIVIDE = 39;
   /** RegularExpression Id. */
-  int MINUS = 40;
+  int REM = 40;
   /** RegularExpression Id. */
-  int MULTIPLY = 41;
+  int BOOLEAN = 41;
   /** RegularExpression Id. */
-  int DIVIDE = 42;
+  int XOR = 42;
   /** RegularExpression Id. */
-  int REM = 43;
+  int NOT = 43;
   /** RegularExpression Id. */
-  int BOOLEAN = 44;
+  int AND = 44;
   /** RegularExpression Id. */
-  int XOR = 45;
+  int OR = 45;
   /** RegularExpression Id. */
-  int NOT = 46;
+  int LPAREN = 46;
   /** RegularExpression Id. */
-  int AND = 47;
+  int RPAREN = 47;
   /** RegularExpression Id. */
-  int OR = 48;
+  int LBRACE = 48;
   /** RegularExpression Id. */
-  int LPAREN = 49;
+  int RBRACE = 49;
   /** RegularExpression Id. */
-  int RPAREN = 50;
+  int LBRACKET = 50;
   /** RegularExpression Id. */
-  int LBRACE = 51;
+  int RBRACKET = 51;
   /** RegularExpression Id. */
-  int RBRACE = 52;
+  int SEMICOLON = 52;
   /** RegularExpression Id. */
-  int LBRACKET = 53;
+  int COMMA = 53;
   /** RegularExpression Id. */
-  int RBRACKET = 54;
+  int DOT = 54;
   /** RegularExpression Id. */
-  int SEMICOLON = 55;
+  int SINGLE_QUOTATION_MARKS = 55;
   /** RegularExpression Id. */
-  int COMMA = 56;
+  int int_constant = 56;
   /** RegularExpression Id. */
-  int DOT = 57;
+  int string_constant = 57;
   /** RegularExpression Id. */
-  int SINGLE_QUOTATION_MARKS = 58;
+  int null_constant = 58;
   /** RegularExpression Id. */
-  int int_constant = 59;
+  int int_literal = 59;
   /** RegularExpression Id. */
-  int string_constant = 60;
+  int float_literal = 60;
   /** RegularExpression Id. */
-  int null_constant = 61;
+  int EXPONENT = 61;
   /** RegularExpression Id. */
-  int int_literal = 62;
+  int boolean_constant = 62;
   /** RegularExpression Id. */
-  int float_literal = 63;
+  int CONSTANT = 63;
   /** RegularExpression Id. */
-  int CHARACTER = 64;
+  int IDENT = 64;
   /** RegularExpression Id. */
-  int EXPONENT = 65;
+  int LETTER = 65;
   /** RegularExpression Id. */
-  int CONSTANT = 66;
+  int DIGIT = 66;
   /** RegularExpression Id. */
-  int IDENT = 67;
+  int INVALID_LEXICAL = 67;
   /** RegularExpression Id. */
-  int LETTER = 68;
-  /** RegularExpression Id. */
-  int DIGIT = 69;
-  /** RegularExpression Id. */
-  int primitivetype = 70;
-  /** RegularExpression Id. */
-  int INVALID_LEXICAL = 71;
-  /** RegularExpression Id. */
-  int INVALID_CONSTANT = 72;
+  int INVALID_CONSTANT = 68;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -167,15 +159,12 @@ public interface FunConstants {
     "\"read\"",
     "\"return\"",
     "\"super\"",
+    "<PRIMITIVE_TYPE>",
     "\"int\"",
     "\"string\"",
     "\"char\"",
     "\"double\"",
     "\"float\"",
-    "\"public\"",
-    "\"protected\"",
-    "\"private\"",
-    "\"final\"",
     "\"=\"",
     "\">\"",
     "\"<\"",
@@ -208,13 +197,12 @@ public interface FunConstants {
     "\"null\"",
     "<int_literal>",
     "<float_literal>",
-    "<CHARACTER>",
     "<EXPONENT>",
+    "<boolean_constant>",
     "<CONSTANT>",
     "<IDENT>",
     "<LETTER>",
     "<DIGIT>",
-    "<primitivetype>",
     "<INVALID_LEXICAL>",
     "<INVALID_CONSTANT>",
   };
