@@ -137,15 +137,6 @@ TOKEN:
 | < FLOAT: "float" >
 }
 
-/* Qualificadores da Linguagem */
-TOKEN:
-{
-  < PUBLIC: "public" >
-| < PROTECTED: "protected" >
-| < PRIVATE: "private" >
-| < FINAL: "final" >
-}
-
 /* Operadores da Linguagem */
 TOKEN:
 {
@@ -222,7 +213,8 @@ TOKEN:
 //    				) 
 //  				) )>
 
-	< CHARACTER: (["\'"])(["A"-"Z","a"-"z","0"-"9"])(["\'"]) ) >
+//	< CHARACTER: "\'"(["A"-"Z","a"-"z","0"-"9"]["\'","\n","\r"])* "\'" >
+	<  CHARACTER: "\'"( ~["\n","\r"])* "\'" >
 |
 	< #EXPONENT: ["e","E"] (["+","-"])?  (["0"-"9"])+ >
 }
@@ -260,6 +252,7 @@ SPECIAL_TOKEN:
 	";",
 	",",
 	".",
+	"'",
 	"=",
 	">",
 	"<",

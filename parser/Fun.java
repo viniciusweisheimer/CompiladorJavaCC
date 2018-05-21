@@ -230,10 +230,10 @@ boolean Menosshort = false;
 	   jj_la1_0 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
 	}
 	private static void jj_la1_init_1() {
-	   jj_la1_1 = new int[] {0x820100,0x180,0x180,0x600,0x600,0x20100,0x20000,};
+	   jj_la1_1 = new int[] {0x40082010,0x18,0x18,0x60,0x60,0x40002010,0x40002000,};
 	}
 	private static void jj_la1_init_2() {
-	   jj_la1_2 = new int[] {0x4,0x0,0x0,0x0,0x0,0x4,0x4,};
+	   jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
 	}
 
   /** Constructor with InputStream. */
@@ -358,7 +358,7 @@ boolean Menosshort = false;
   /** Generate ParseException. */
   public ParseException generateParseException() {
 	 jj_expentries.clear();
-	 boolean[] la1tokens = new boolean[73];
+	 boolean[] la1tokens = new boolean[69];
 	 if (jj_kind >= 0) {
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
@@ -378,7 +378,7 @@ boolean Menosshort = false;
 		 }
 	   }
 	 }
-	 for (int i = 0; i < 73; i++) {
+	 for (int i = 0; i < 69; i++) {
 	   if (la1tokens[i]) {
 		 jj_expentry = new int[1];
 		 jj_expentry[0] = i;

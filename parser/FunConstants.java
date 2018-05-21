@@ -45,95 +45,87 @@ public interface FunConstants {
   /** RegularExpression Id. */
   int FLOAT = 27;
   /** RegularExpression Id. */
-  int PUBLIC = 28;
+  int ASSIGN = 28;
   /** RegularExpression Id. */
-  int PROTECTED = 29;
+  int GT = 29;
   /** RegularExpression Id. */
-  int PRIVATE = 30;
+  int LT = 30;
   /** RegularExpression Id. */
-  int FINAL = 31;
+  int EQ = 31;
   /** RegularExpression Id. */
-  int ASSIGN = 32;
+  int LE = 32;
   /** RegularExpression Id. */
-  int GT = 33;
+  int GE = 33;
   /** RegularExpression Id. */
-  int LT = 34;
+  int NEQ = 34;
   /** RegularExpression Id. */
-  int EQ = 35;
+  int PLUS = 35;
   /** RegularExpression Id. */
-  int LE = 36;
+  int MINUS = 36;
   /** RegularExpression Id. */
-  int GE = 37;
+  int MULTIPLY = 37;
   /** RegularExpression Id. */
-  int NEQ = 38;
+  int DIVIDE = 38;
   /** RegularExpression Id. */
-  int PLUS = 39;
+  int REM = 39;
   /** RegularExpression Id. */
-  int MINUS = 40;
+  int BOOLEAN = 40;
   /** RegularExpression Id. */
-  int MULTIPLY = 41;
+  int XOR = 41;
   /** RegularExpression Id. */
-  int DIVIDE = 42;
+  int NOT = 42;
   /** RegularExpression Id. */
-  int REM = 43;
+  int AND = 43;
   /** RegularExpression Id. */
-  int BOOLEAN = 44;
+  int OR = 44;
   /** RegularExpression Id. */
-  int XOR = 45;
+  int LPAREN = 45;
   /** RegularExpression Id. */
-  int NOT = 46;
+  int RPAREN = 46;
   /** RegularExpression Id. */
-  int AND = 47;
+  int LBRACE = 47;
   /** RegularExpression Id. */
-  int OR = 48;
+  int RBRACE = 48;
   /** RegularExpression Id. */
-  int LPAREN = 49;
+  int LBRACKET = 49;
   /** RegularExpression Id. */
-  int RPAREN = 50;
+  int RBRACKET = 50;
   /** RegularExpression Id. */
-  int LBRACE = 51;
+  int SEMICOLON = 51;
   /** RegularExpression Id. */
-  int RBRACE = 52;
+  int COMMA = 52;
   /** RegularExpression Id. */
-  int LBRACKET = 53;
+  int DOT = 53;
   /** RegularExpression Id. */
-  int RBRACKET = 54;
+  int SINGLE_QUOTATION_MARKS = 54;
   /** RegularExpression Id. */
-  int SEMICOLON = 55;
+  int int_constant = 55;
   /** RegularExpression Id. */
-  int COMMA = 56;
+  int string_constant = 56;
   /** RegularExpression Id. */
-  int DOT = 57;
+  int null_constant = 57;
   /** RegularExpression Id. */
-  int SINGLE_QUOTATION_MARKS = 58;
+  int int_literal = 58;
   /** RegularExpression Id. */
-  int int_constant = 59;
+  int float_literal = 59;
   /** RegularExpression Id. */
-  int string_constant = 60;
+  int CHARACTER = 60;
   /** RegularExpression Id. */
-  int null_constant = 61;
+  int EXPONENT = 61;
   /** RegularExpression Id. */
-  int int_literal = 62;
+  int CONSTANT = 62;
   /** RegularExpression Id. */
-  int float_literal = 63;
+  int IDENT = 63;
   /** RegularExpression Id. */
-  int CHARACTER = 64;
+  int LETTER = 64;
   /** RegularExpression Id. */
-  int EXPONENT = 65;
+  int DIGIT = 65;
   /** RegularExpression Id. */
-  int CONSTANT = 66;
+  int primitivetype = 66;
   /** RegularExpression Id. */
-  int IDENT = 67;
+  int INVALID_LEXICAL = 67;
   /** RegularExpression Id. */
-  int LETTER = 68;
-  /** RegularExpression Id. */
-  int DIGIT = 69;
-  /** RegularExpression Id. */
-  int primitivetype = 70;
-  /** RegularExpression Id. */
-  int INVALID_LEXICAL = 71;
-  /** RegularExpression Id. */
-  int INVALID_CONSTANT = 72;
+  int INVALID_CONSTANT = 68;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -172,10 +164,6 @@ public interface FunConstants {
     "\"char\"",
     "\"double\"",
     "\"float\"",
-    "\"public\"",
-    "\"protected\"",
-    "\"private\"",
-    "\"final\"",
     "\"=\"",
     "\">\"",
     "\"<\"",
