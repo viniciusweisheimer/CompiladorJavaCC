@@ -161,22 +161,15 @@ TOKEN :
 /* Tipos de variáveis */
 TOKEN:
 {
-  < PRIMITIVE_TYPE: (< INT >|< CHAR >|< BOOLEAN >|< FLOAT >|<STRING>) >
-| < INT: "int" >
-| < STRING: "string" >
-| < CHAR: "char" >
-| < DOUBLE: "double" >
-| < BYTE: "byte" >
-| < SHORT: "short" >
-| < LONG: "long" >
-| < FLOAT: "float" >
-}
-
-
-TOKEN : // constantes
-{
-  < CONSTANT : (< DIGIT >)+ >
-| < #DIGIT : [ "0"-"9" ] >
+  < PRIMITIVE_TYPE: (<INT> | <CHAR> | <BOOLEAN> | <FLOAT> | <STRING>) >
+| < #INT: "int" >
+| < #STRING: "string" >
+| < #CHAR: "char" >
+| < #DOUBLE: "double" >
+| < #BYTE: "byte" >
+| < #SHORT: "short" >
+| < #LONG: "long" >
+| < #FLOAT: "float" >
 }
 
 /* Operadores */
@@ -202,14 +195,13 @@ TOKEN :
 
 TOKEN:
 {
-  < NOT:"not" >
-| < XOR:"xor" >
-| < AND:"and" >
-| < OR:"or" >
+  < NOT:"NOT" >
+| < XOR:"XOR" >
+| < AND:"AND" >
+| < OR:"OR" >
 }
 
 /* Símbolos especiais */
-
 TOKEN :
 {
   < LPAREN: "(" >
@@ -225,53 +217,33 @@ TOKEN :
 | < COLON: ":" >
 }
 
-//operadores lógicos
-
+/* Constantes da Linguagem */
 TOKEN:
 {
   < int_constant:( //números decimais,octais, hexadeciamais ou binários
-    			  (["0"-"9"] (["0"-"9"])*) |
-    			  (["0"-"7"] (["0"-"7"])* (["o", "0"]) |
-    			  (["0"-"9"] (["0"-"7","A"-"F","a"-"f"])* ["h", "H"] ) |
-    			  (["0"-"1"] (["0"-"1"])* ["b", "B"])
-    			  ))> 
-| 
-  <  string_constant: //"constante string como "abcd"
+    			  (["0"-"9"] (["0"-"9"])*)
+//    			  |
+//    			  (["0"-"7"] (["0"-"7"])* (["o", "0"]) |
+//    			  (["0"-"9"] (["0"-"7","A"-"F","a"-"f"])* ["h", "H"] ) |
+//    			  (["0"-"1"] (["0"-"1"])* ["b", "B"])
+    			  )> 
+| < string_constant: //"constante string como "abcd"
   		"\""( ~["\"","\n","\r"])* "\"" >
 
-|
-  < null_constant : "null" > // constant null
-|
-  < int_literal : < DIGIT >(< DIGIT >)* >
-|
-
-//  Float que aceita notação ciêntifica
-//  < float_literal:	(< int_literal >) "." ( < int_literal > (( "e" | "E" ) ("-")?
-//  < int_literal > )?)? |
-//  						(< int_literal >)? "." (< int_literal > (( "e" | "E" ) ("-")?
-//  						< int_literal > )? >
-
-	< float_literal:	( < int_literal > ) "." ( < int_literal > ) >
-|
-//	< CHARACTER:( (~[" ","\\","\n","\r"])
-//			|	("\\"
-//    				( ["n","t","b","r","f","\\","'","\""]
-//    		| 		  ["u","U"]["+"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]
-//    				) 
-//  				) )>
-
-	< CHARACTER: "\""( ~["\n","\r","\f","\t"])* "\"" >
-|
-	< #EXPONENT: ["e","E"] (["+","-"])?  (["0"-"9"])+ >
+| < null_constant : "null" > // constant null
+| < float_constant:	<DIGIT >(<DIGIT>)*"."<DIGIT>(<DIGIT>)* > 
+| < CHARACTER: "\""( ~["\n","\r","\f","\t"])* "\"" >
+| < #EXPONENT: ["e","E"] (["+","-"])?  (["0"-"9"])+ >
+| < boolean_constant:("true"|"false") >
 }
 
 /* Identificadores */
-
 TOKEN :
 {
   < IDENT: <LETTER> (<LETTER> | <DIGIT> | "_")* >
-|
-  < #LETTER:["A"-"Z","a"-"z"] >
+| < #LETTER:["A"-"Z","a"-"z"] >
+| < #DIGIT:["0"-"9"] >
+| < #UNDERSCORE:"_" >
 }
 
 /* Trata os erros léxicos */
@@ -371,7 +343,6 @@ void varinit():
 {
 }
 {
-	<CONSTRUCTOR> methodbody()
 	lvalue() [<ASSIGN> (alocexpression() | expression())]
 }
 
@@ -388,8 +359,7 @@ void methoddecl():
 }
 {
 	 (< PRIMITIVE_TYPE> | <IDENT>)
-
-	(<LBRACKET> <RBRACKET>)* <IDENT> methodbody()
+	 (<LBRACKET> <RBRACKET>)* <IDENT> methodbody()
 }
 
 void methodbody():
@@ -412,20 +382,36 @@ void statement():
 {
 }
 {
-    LOOKAHEAD(3)
-    vardecl() <SEMICOLON>
-  |	LOOKAHEAD(4)
-    methodcall() <SEMICOLON>
-  |	LOOKAHEAD(3)
-    atribstat() <SEMICOLON>
+    LOOKAHEAD(3) vardecl() <SEMICOLON>
+  |	LOOKAHEAD(4) methodcall() <SEMICOLON>
+  |	LOOKAHEAD(3) atribstat() <SEMICOLON>
   |	printstat() <SEMICOLON>
   |	readstat() <SEMICOLON>
   |	returnstat() <SEMICOLON>
   |	superstat() <SEMICOLON>
   |	ifstat()
+  | forstat()
   |	<LBRACE> statlist() <RBRACE>
   |	<BREAK> <SEMICOLON>
   |	<SEMICOLON>
+}
+
+void methodcall():
+{
+}
+{
+	 <IDENT>
+  ( <DOT> <IDENT> )* <LPAREN> arglist() <RPAREN>
+}
+
+void lvalue() :
+{
+}
+{
+  <IDENT> (
+           <LBRACKET> expression() <RBRACKET> |
+           <DOT> <IDENT> [<LPAREN> arglist() <RPAREN>]
+         )*
 }
 
 void atribstat():
@@ -470,7 +456,7 @@ void ifstat():
 }
 {
 	<IF> <LPAREN> expression() <RPAREN> statement()
-	[LOOKAHEAD(1) <ELSE> statement()]
+	[LOOKAHEAD(2)<ELSE> statement()]
 }
 
 void forstat():
@@ -490,23 +476,13 @@ void  statlist() :
   statement() [statlist()]
 }
 
-void lvalue() :
-{
-}
-{
-  <IDENT> (
-           <LBRACKET> expression() <RBRACKET> |
-           <DOT> <IDENT> [<LPAREN> arglist() <RPAREN>]
-         )*
-}
-
 void alocexpression() :
 {
 }
 {
     <NEW> (
              LOOKAHEAD(2) (<IDENT> <LPAREN> arglist() <RPAREN>) |
-             (<PRIMITIVE_TYPE> | <IDENT>) (<LBRACKET> numexpr() <RBRACKET>)+
+             (<PRIMITIVE_TYPE> | <IDENT>) (<LBRACKET> expression() <RBRACKET>)+
           )
 }
 
@@ -558,12 +534,4 @@ void arglist():
 }
 {
     [expression() (<COMMA> expression())*]
-}
-
-void methodcall():
-{
-}
-{
-	 <IDENT>
-  ( <DOT> <IDENT> )* <LPAREN> arglist() <RPAREN>
 }
