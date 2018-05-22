@@ -11,142 +11,151 @@ public interface FunConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int BREAK = 11;
+  int BREAK = 12;
   /** RegularExpression Id. */
-  int CLASS = 12;
+  int CLASS = 13;
   /** RegularExpression Id. */
-  int CONSTRUCTOR = 13;
+  int CONSTRUCTOR = 14;
   /** RegularExpression Id. */
-  int ELSE = 14;
+  int ELSE = 15;
   /** RegularExpression Id. */
-  int EXTENDS = 15;
+  int EXTENDS = 16;
   /** RegularExpression Id. */
-  int FOR = 16;
+  int FOR = 17;
   /** RegularExpression Id. */
-  int IF = 17;
+  int IF = 18;
   /** RegularExpression Id. */
-  int NEW = 18;
+  int NEW = 19;
   /** RegularExpression Id. */
-  int PRINT = 19;
+  int PRINT = 20;
   /** RegularExpression Id. */
-  int READ = 20;
+  int READ = 21;
   /** RegularExpression Id. */
-  int RETURN = 21;
+  int RETURN = 22;
   /** RegularExpression Id. */
-  int SUPER = 22;
+  int SUPER = 23;
   /** RegularExpression Id. */
-  int PRIMITIVE_TYPE = 23;
+  int PRIMITIVE_TYPE = 24;
   /** RegularExpression Id. */
-  int INT = 24;
+  int INT = 25;
   /** RegularExpression Id. */
-  int STRING = 25;
+  int STRING = 26;
   /** RegularExpression Id. */
-  int CHAR = 26;
+  int CHAR = 27;
   /** RegularExpression Id. */
-  int DOUBLE = 27;
+  int DOUBLE = 28;
   /** RegularExpression Id. */
-  int FLOAT = 28;
+  int BYTE = 29;
   /** RegularExpression Id. */
-  int ASSIGN = 29;
+  int SHORT = 30;
   /** RegularExpression Id. */
-  int GT = 30;
+  int LONG = 31;
   /** RegularExpression Id. */
-  int LT = 31;
+  int FLOAT = 32;
   /** RegularExpression Id. */
-  int EQ = 32;
+  int CONSTANT = 33;
   /** RegularExpression Id. */
-  int LE = 33;
+  int DIGIT = 34;
   /** RegularExpression Id. */
-  int GE = 34;
+  int ASSIGN = 35;
   /** RegularExpression Id. */
-  int NEQ = 35;
+  int GT = 36;
   /** RegularExpression Id. */
-  int PLUS = 36;
+  int LT = 37;
   /** RegularExpression Id. */
-  int MINUS = 37;
+  int EQ = 38;
   /** RegularExpression Id. */
-  int MULTIPLY = 38;
+  int LE = 39;
   /** RegularExpression Id. */
-  int DIVIDE = 39;
+  int GE = 40;
   /** RegularExpression Id. */
-  int REM = 40;
+  int NEQ = 41;
   /** RegularExpression Id. */
-  int BOOLEAN = 41;
+  int PLUS = 42;
   /** RegularExpression Id. */
-  int XOR = 42;
+  int MINUS = 43;
   /** RegularExpression Id. */
-  int NOT = 43;
+  int MULTIPLY = 44;
   /** RegularExpression Id. */
-  int AND = 44;
+  int DIVIDE = 45;
   /** RegularExpression Id. */
-  int OR = 45;
+  int REM = 46;
   /** RegularExpression Id. */
-  int LPAREN = 46;
+  int BOOLEAN = 47;
   /** RegularExpression Id. */
-  int RPAREN = 47;
+  int NOT = 48;
   /** RegularExpression Id. */
-  int LBRACE = 48;
+  int XOR = 49;
   /** RegularExpression Id. */
-  int RBRACE = 49;
+  int AND = 50;
   /** RegularExpression Id. */
-  int LBRACKET = 50;
+  int OR = 51;
   /** RegularExpression Id. */
-  int RBRACKET = 51;
+  int LPAREN = 52;
   /** RegularExpression Id. */
-  int SEMICOLON = 52;
+  int RPAREN = 53;
   /** RegularExpression Id. */
-  int COMMA = 53;
+  int LBRACE = 54;
   /** RegularExpression Id. */
-  int DOT = 54;
+  int RBRACE = 55;
   /** RegularExpression Id. */
-  int SINGLE_QUOTATION_MARKS = 55;
+  int LBRACKET = 56;
   /** RegularExpression Id. */
-  int int_constant = 56;
+  int RBRACKET = 57;
   /** RegularExpression Id. */
-  int string_constant = 57;
+  int SEMICOLON = 58;
   /** RegularExpression Id. */
-  int null_constant = 58;
+  int COMMA = 59;
   /** RegularExpression Id. */
-  int int_literal = 59;
+  int SINGLEQUOTATIONMARKS = 60;
   /** RegularExpression Id. */
-  int float_literal = 60;
+  int DOT = 61;
   /** RegularExpression Id. */
-  int EXPONENT = 61;
+  int COLON = 62;
   /** RegularExpression Id. */
-  int boolean_constant = 62;
+  int int_constant = 63;
   /** RegularExpression Id. */
-  int CONSTANT = 63;
+  int string_constant = 64;
   /** RegularExpression Id. */
-  int IDENT = 64;
+  int null_constant = 65;
   /** RegularExpression Id. */
-  int LETTER = 65;
+  int int_literal = 66;
   /** RegularExpression Id. */
-  int DIGIT = 66;
+  int float_literal = 67;
   /** RegularExpression Id. */
-  int INVALID_LEXICAL = 67;
+  int CHARACTER = 68;
   /** RegularExpression Id. */
-  int INVALID_CONSTANT = 68;
+  int EXPONENT = 69;
+  /** RegularExpression Id. */
+  int IDENT = 70;
+  /** RegularExpression Id. */
+  int LETTER = 71;
+  /** RegularExpression Id. */
+  int INVALID_LEXICAL = 72;
+  /** RegularExpression Id. */
+  int INVALID_CONST = 73;
 
   /** Lexical state. */
   int DEFAULT = 0;
   /** Lexical state. */
-  int singlelinecomment = 1;
+  int multilinecomment = 1;
   /** Lexical state. */
-  int multilinecomment = 2;
+  int singlelinecomment = 2;
 
   /** Literal token values. */
   String[] tokenImage = {
     "<EOF>",
-    "\"/*\"",
-    "\"//\"",
-    "<token of kind 3>",
-    "<token of kind 4>",
-    "\"*/\"",
-    "<token of kind 6>",
     "\" \"",
-    "\"\\r\"",
     "\"\\t\"",
     "\"\\n\"",
+    "\"\\r\"",
+    "\"\\f\"",
+    "\"/*\"",
+    "\"//\"",
+    "\"*/\"",
+    "<token of kind 9>",
+    "<token of kind 10>",
+    "<token of kind 11>",
     "\"break\"",
     "\"class\"",
     "\"constructor\"",
@@ -164,7 +173,12 @@ public interface FunConstants {
     "\"string\"",
     "\"char\"",
     "\"double\"",
+    "\"byte\"",
+    "\"short\"",
+    "\"long\"",
     "\"float\"",
+    "<CONSTANT>",
+    "<DIGIT>",
     "\"=\"",
     "\">\"",
     "\"<\"",
@@ -178,8 +192,8 @@ public interface FunConstants {
     "\"/\"",
     "\"%\"",
     "<BOOLEAN>",
-    "\"xor\"",
     "\"not\"",
+    "\"xor\"",
     "\"and\"",
     "\"or\"",
     "\"(\"",
@@ -190,21 +204,20 @@ public interface FunConstants {
     "\"]\"",
     "\";\"",
     "\",\"",
-    "\".\"",
     "\"\\\'\"",
+    "\".\"",
+    "\":\"",
     "<int_constant>",
     "<string_constant>",
     "\"null\"",
     "<int_literal>",
     "<float_literal>",
+    "<CHARACTER>",
     "<EXPONENT>",
-    "<boolean_constant>",
-    "<CONSTANT>",
     "<IDENT>",
     "<LETTER>",
-    "<DIGIT>",
     "<INVALID_LEXICAL>",
-    "<INVALID_CONSTANT>",
+    "<INVALID_CONST>",
   };
 
 }

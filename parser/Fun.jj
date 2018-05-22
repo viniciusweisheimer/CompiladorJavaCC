@@ -10,86 +10,74 @@ options
  PARSER_BEGIN(Fun)
 
 package parser;
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 
 
 public class Fun
 {
+final static String Version = "Fun Compiler - Version 1.0 - 2018";
+int contParseError = 0; 	//contador de erros sintaticos
 
-	final static String Version = "Fun Compiler Version 0.2.1 - 2018";
-	int contParseErro= 0; //contador de erro
+// Define método "main" da classe Fun
+	public static void main(String args[])
+	{
+	boolean debug = false;
 
+		String filename = "";
+		Fun parser;
+		int i;
+		boolean ms = false;
 
-  public static void main(String args []) throws ParseException
-  {
+		System.out.println("Version");
+		// lê os parâmetros passados para o compilador
+		for (i = 0; i < args.length -1; i++)
+		{
+		  if(args[i].equals("-debug_AS") )
+		  		debug = true;
+		  else
+		  	{
+		  	  	System.out.println("Utilizacao : " +
+		  	  						"java fun [-debug_AS] inputfile");
+		  	  	System.exit(0);
+		 	}
+		}
 
-	boolean debug_as = false;
+		if (args[i].equals("-"))
+		{ //lê da entrada padrão
+			System.out.println("Lendo da entrada padrão ...");
+			parser = new Fun(System.in); // cria AS
+		}
+		else
+		{ // lê do arquivo
+			filename = args[args.length-1];
+			System.out.println("Lendo do arquivo " + filename + " ...");
+			try {
+				parser = new Fun(new FileInputStream(filename));
+			}
+		  catch (FileNotFoundException e) {
+		    		System.out.println("Arquivo " + filename + " nao encontrado.");
+		    		return;
+		 			}
+		}
 
-    Fun parser = new Fun(System.in); //analisador lexico/sintatico
-	String filename = ""; // nome do arquivo a ser analisado
-   	int i;
+		if (!debug) parser.disable_tracing(); // desabilita verbose do AS
 
-	try {
-    	parser.program();
-    	System.out.println("Sucesso!");
-  	} catch (ParseException e) {
-  		System.out.println(e);
-  	} catch (TokenMgrError e) {
-  	  	System.out.println(e);
-  	}
-
-
-	System.out.println(Version);
-
-    // le os parametros passados para o compilador
-    for (i = 0; i < args.length - 1; i++)
-    {
-    if (args[i].equals("-debug_AS") )
-            debug_as = true;
-    else
-        {
-            System.out.println("Usage is: java Fun[-debug_AS]  + inputfile");
-            System.exit(0);
-        }
-    }
-
-    if (args[i].equals("-"))
-      // le da entrada padrao
-    {
-        System.out.println("Reading from standard input . . .");
-        parser = new Fun(System.in);
-     }
-
-     else
-     // le do arquivo
-    {
-        filename = args[args.length-1];
-        System.out.println("Reading from file " + filename + " . . .");
-        try {
-         parser = new Fun(new java.io.FileInputStream(filename));
-        }
-    catch (java.io.FileNotFoundException e) {
-               System.out.println("File " + filename + " not found.");
-        return;
-        }
-  }
-
-
-    if (! debug_as) parser.disable_tracing(); // desabilita verbose do AS
-    try {
-        parser.program();   // chama o metodo que faz a analise
-    }
-    catch (ParseException e)
-    {
-    System.err.println(e.getMessage());
-    }
-    finally {
-        System.out.println(parser.token_source.foundLexError() +
-                                " Lexical Errors found");
-        System.out.println(parser.contParseErro + " Syntactic Errors found");
-     }
-} // main
-
+		try {
+		  		parser.program(); //chama o método para fazer análise
+		}
+		catch (ParseException e)  	
+		{
+		System.err.println(e.getMessage());
+		parser.contParseError = 1; // não existe recuperação de erros
+		}
+		finally {
+		  System.out.println(parser.token_source.foundLexError() +
+		  						"Lexical Errors found");
+		  System.out.println(parser.contParseError +
+		  						"Syntatic Errors found");
+		  	}
+	} //main
 
 static public String im(int x)
 {
@@ -173,7 +161,8 @@ TOKEN :
 /* Tipos de variáveis */
 TOKEN:
 {
-  < INT: "int" >
+  < PRIMITIVE_TYPE: (< INT >|< CHAR >|< BOOLEAN >|< FLOAT >|<STRING>) >
+| < INT: "int" >
 | < STRING: "string" >
 | < CHAR: "char" >
 | < DOUBLE: "double" >
@@ -183,57 +172,11 @@ TOKEN:
 | < FLOAT: "float" >
 }
 
-TOKEN :
-{
-  < primitivetype: "int"|"char"|"boolean"|"float"|"not"|"and"|"or"|"xor" >
-}
-
-TOKEN: // Numeros de ponto flutuante
-{
-< float_literal:( < intLiteral  > ) "." ( < intLiteral > ) >
-|
-  < #EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+ >
-|
- < CHARACTER_LITERAL:
-    	//( ["A"-"Z","a"-"z"])
-	( ["'"]["A"-"Z","a"-"z"]["'"])
-|
-	( ["'"]["0"-"9"]["'"])
-|
-	( ["'"]["\\"]["n","r","t","f"]["'"])
->
-}
 
 TOKEN : // constantes
 {
   < CONSTANT : (< DIGIT >)+ >
 | < #DIGIT : [ "0"-"9" ] >
-}
-
-/* constantes */
-
-TOKEN :
-{
-  < int_constant : (  // números decimais, octais, hexadecimais ou binários
-                  (["0"-"9"] (["0"-"9"])* ["d", "D"] ) |
-                  (["0"-"7"] (["0"-"7"])* ["o", "O"] ) |
-                  (["0"-"9"] (["0"-"7","A"-"F","a"-"f"])* ["h", "H"] ) |
-                  (["0"-"1"] (["0"-"1"])* ["b", "B"])
-                 ) >
-
-	//< stringLiteral : "\"" ( <LETTER> | <DIGIT> )* "\"" > // cadeias de letras e numeros exclusivamente
-|
-	< intLiteral : <DIGIT> (<DIGIT>)* > // apenas números
-|
-
-  	< floatLiteral :  <intLiteral> "." ( <intLiteral> | <intLiteral> ( "e" | "E" )? ("-")? <intLiteral> )? |
-		(<intLiteral>) "." ( <intLiteral> | <intLiteral> ( "e" | "E" )? ("-")? <intLiteral> ) >
-
-|
-  	< string_constant:    // constante string como "abcd bcda"
-     	 "\""( ~["\"","\n","\r"])* "\"" >
-|
-  	< null_constant: "null" > // constante null
 }
 
 /* Operadores */
@@ -249,10 +192,20 @@ TOKEN :
 | < NEQ: "!=" >
 | < PLUS: "+" >
 | < MINUS: "-" >
-| < STAR: "*" >
-| < SLASH: "/" >
+| < MULTIPLY: "*" >
+| < DIVIDE: "/" >
 | < REM: "%" >
 | < BOOLEAN :"true"|"false" >
+}
+
+/* Operadores Booleanos */
+
+TOKEN:
+{
+  < NOT:"not" >
+| < XOR:"xor" >
+| < AND:"and" >
+| < OR:"or" >
 }
 
 /* Símbolos especiais */
@@ -276,10 +229,40 @@ TOKEN :
 
 TOKEN:
 {
-  < AND: "AND" >
-| < OR: "OR" >
-| < XOR: "XOR" >
-| < NOT: "NOT" >
+  < int_constant:( //números decimais,octais, hexadeciamais ou binários
+    			  (["0"-"9"] (["0"-"9"])*) |
+    			  (["0"-"7"] (["0"-"7"])* (["o", "0"]) |
+    			  (["0"-"9"] (["0"-"7","A"-"F","a"-"f"])* ["h", "H"] ) |
+    			  (["0"-"1"] (["0"-"1"])* ["b", "B"])
+    			  ))> 
+| 
+  <  string_constant: //"constante string como "abcd"
+  		"\""( ~["\"","\n","\r"])* "\"" >
+
+|
+  < null_constant : "null" > // constant null
+|
+  < int_literal : < DIGIT >(< DIGIT >)* >
+|
+
+//  Float que aceita notação ciêntifica
+//  < float_literal:	(< int_literal >) "." ( < int_literal > (( "e" | "E" ) ("-")?
+//  < int_literal > )?)? |
+//  						(< int_literal >)? "." (< int_literal > (( "e" | "E" ) ("-")?
+//  						< int_literal > )? >
+
+	< float_literal:	( < int_literal > ) "." ( < int_literal > ) >
+|
+//	< CHARACTER:( (~[" ","\\","\n","\r"])
+//			|	("\\"
+//    				( ["n","t","b","r","f","\\","'","\""]
+//    		| 		  ["u","U"]["+"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]["0"-"9","a"-"f","A"-"F"]
+//    				) 
+//  				) )>
+
+	< CHARACTER: "\""( ~["\n","\r","\f","\t"])* "\"" >
+|
+	< #EXPONENT: ["e","E"] (["+","-"])?  (["0"-"9"])+ >
 }
 
 /* Identificadores */
@@ -289,7 +272,6 @@ TOKEN :
   < IDENT: <LETTER> (<LETTER> | <DIGIT> | "_")* >
 |
   < #LETTER:["A"-"Z","a"-"z"] >
-
 }
 
 /* Trata os erros léxicos */
@@ -309,6 +291,7 @@ SPECIAL_TOKEN :
   ";",
   ",",
   ".",
+  "'",
   "=",
   ">",
   "<",
@@ -337,7 +320,6 @@ SPECIAL_TOKEN :
                            " - String constant has a \\n: " + image);
     countLexError++;
    }
-
 }
 
  void program() :
@@ -345,6 +327,7 @@ SPECIAL_TOKEN :
 }
 {
     [ classlist() ] <EOF>
+
 }
 
 void classlist():
@@ -366,11 +349,12 @@ void classbody():
 {
 }
 {
-   <LBRACE>
-      [classlist()]
-      (constructdecl())*
-      (methoddecl())*
-   <RBRACE>
+	<LBRACE>
+		[classlist()]
+		(LOOKAHEAD(3) vardecl() <SEMICOLON>)*
+		(constructdecl())*
+		(methoddecl())*
+	<RBRACE>
 }
 
 
@@ -378,7 +362,7 @@ void vardecl():
 {
 }
 {
-  (<primitivetype> | <IDENT>)
+  (<PRIMITIVE_TYPE> | <IDENT>)
   (<LBRACKET> <RBRACKET>)* varinit()
   (<COMMA> varinit())*
 }
@@ -387,6 +371,7 @@ void varinit():
 {
 }
 {
+	<CONSTRUCTOR> methodbody()
 	lvalue() [<ASSIGN> (alocexpression() | expression())]
 }
 
@@ -402,7 +387,7 @@ void methoddecl():
 {
 }
 {
-	 (< primitivetype> | <IDENT>)
+	 (< PRIMITIVE_TYPE> | <IDENT>)
 
 	(<LBRACKET> <RBRACKET>)* <IDENT> methodbody()
 }
@@ -418,9 +403,8 @@ void paramlist():
 {
 }
 {
-
-    [ (<primitivetype> | <IDENT>) <IDENT> (<LBRACKET> <RBRACKET>)*
-    (<COMMA> (<primitivetype > | <IDENT>) <IDENT> (<LBRACKET> <RBRACKET>)* )*
+   [ (<PRIMITIVE_TYPE> | <IDENT>) <IDENT> (<LBRACKET> <RBRACKET>)*
+    (<COMMA> (<PRIMITIVE_TYPE > | <IDENT>) <IDENT> (<LBRACKET> <RBRACKET>)* )*
    ]
 }
 
@@ -485,11 +469,9 @@ void ifstat():
 {
 }
 {
-    <IF> <LPAREN> expression() <RPAREN> statement()
-    [<ELSE> statement()]
+	<IF> <LPAREN> expression() <RPAREN> statement()
+	[LOOKAHEAD(1) <ELSE> statement()]
 }
-
-
 
 void forstat():
 {
@@ -505,7 +487,7 @@ void  statlist() :
 {
 }
 {
-   statement() [statlist()]
+  statement() [statlist()]
 }
 
 void lvalue() :
@@ -524,7 +506,7 @@ void alocexpression() :
 {
     <NEW> (
              LOOKAHEAD(2) (<IDENT> <LPAREN> arglist() <RPAREN>) |
-             (<primitivetype> | <IDENT>) (<LBRACKET> numexpr() <RBRACKET>)+
+             (<PRIMITIVE_TYPE> | <IDENT>) (<LBRACKET> numexpr() <RBRACKET>)+
           )
 }
 
@@ -532,8 +514,8 @@ void expression() :
 {
 }
 {
-    [<NOT>] numexpr() [( <LT> | <GT> | <LE> | <GE> | <EQ> | <NEQ>) numexpr()]
-	[(<AND>|<OR>|<XOR>) expression()]
+	[<NOT>] numexpr() [( <LT> | <GT> | <LE> | <GE> | <EQ> | <NEQ>) numexpr()]
+		[(<AND>|<OR>|<XOR>) expression()]
 }
 
 void numexpr():
@@ -547,7 +529,7 @@ void term():
 {
 }
 {
-    unaryexpr() ((<STAR> | <SLASH>| <REM>) unaryexpr())*
+	unaryexpr() ((<MULTIPLY> | <DIVIDE> | <REM>) unaryexpr())*
 }
 
 void unaryexpr() :
