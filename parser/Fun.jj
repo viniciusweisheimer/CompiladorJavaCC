@@ -162,14 +162,11 @@ TOKEN :
 TOKEN:
 {
   < PRIMITIVE_TYPE: (<INT> | <CHAR> | <BOOLEAN> | <FLOAT> | <STRING>) >
-| < #INT: "int" >
-| < #STRING: "string" >
-| < #CHAR: "char" >
-| < #DOUBLE: "double" >
-| < #BYTE: "byte" >
-| < #SHORT: "short" >
-| < #LONG: "long" >
-| < #FLOAT: "float" >
+| < #INT:"int" >
+| < #STRING:"string" >
+| < #CHAR:"char" >
+| < #FLOAT:"float" >
+| < #BOOLEAN:"boolean" >
 }
 
 /* Operadores */
@@ -188,7 +185,6 @@ TOKEN :
 | < MULTIPLY: "*" >
 | < DIVIDE: "/" >
 | < REM: "%" >
-| < BOOLEAN :"true"|"false" >
 }
 
 /* Operadores Booleanos */
@@ -220,18 +216,16 @@ TOKEN :
 /* Constantes da Linguagem */
 TOKEN:
 {
-  < int_constant:( //números decimais,octais, hexadeciamais ou binários
-    			  (["0"-"9"] (["0"-"9"])*)
-//    			  |
-//    			  (["0"-"7"] (["0"-"7"])* (["o", "0"]) |
-//    			  (["0"-"9"] (["0"-"7","A"-"F","a"-"f"])* ["h", "H"] ) |
-//    			  (["0"-"1"] (["0"-"1"])* ["b", "B"])
-    			  )> 
+  	< number_constant:(
+		<int_literal> |
+		<float_literal>
+	) >
+| < #int_literal: (["0"-"9"] (["0"-"9"])*) > // apenas numeros
+| < #float_literal: ( ["0"-"9"] (["0"-"9"])* "." ["0"-"9"] (["0"-"9"])* ) > //numeros float com .
 | < string_constant: //"constante string como "abcd"
   		"\""( ~["\"","\n","\r"])* "\"" >
 
 | < null_constant : "null" > // constant null
-| < float_constant:	<DIGIT >(<DIGIT>)*"."<DIGIT>(<DIGIT>)* > 
 | < CHARACTER: "\""( ~["\n","\r","\f","\t"])* "\"" >
 | < #EXPONENT: ["e","E"] (["+","-"])?  (["0"-"9"])+ >
 | < boolean_constant:("true"|"false") >
@@ -521,9 +515,10 @@ void factor():
 }
 {
     (
-       <int_constant> |
+       <number_constant> |
        <string_constant> |
        <null_constant> |
+       <boolean_constant> |
        lvalue() |
        <LPAREN> expression() <RPAREN>
 	)

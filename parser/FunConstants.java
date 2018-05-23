@@ -43,97 +43,91 @@ public interface FunConstants {
   /** RegularExpression Id. */
   int CHAR = 27;
   /** RegularExpression Id. */
-  int DOUBLE = 28;
+  int FLOAT = 28;
   /** RegularExpression Id. */
-  int BYTE = 29;
+  int BOOLEAN = 29;
   /** RegularExpression Id. */
-  int SHORT = 30;
+  int ASSIGN = 30;
   /** RegularExpression Id. */
-  int LONG = 31;
+  int GT = 31;
   /** RegularExpression Id. */
-  int FLOAT = 32;
+  int LT = 32;
   /** RegularExpression Id. */
-  int CONSTANT = 33;
+  int EQ = 33;
   /** RegularExpression Id. */
-  int DIGIT = 34;
+  int LE = 34;
   /** RegularExpression Id. */
-  int ASSIGN = 35;
+  int GE = 35;
   /** RegularExpression Id. */
-  int GT = 36;
+  int NEQ = 36;
   /** RegularExpression Id. */
-  int LT = 37;
+  int PLUS = 37;
   /** RegularExpression Id. */
-  int EQ = 38;
+  int MINUS = 38;
   /** RegularExpression Id. */
-  int LE = 39;
+  int MULTIPLY = 39;
   /** RegularExpression Id. */
-  int GE = 40;
+  int DIVIDE = 40;
   /** RegularExpression Id. */
-  int NEQ = 41;
+  int REM = 41;
   /** RegularExpression Id. */
-  int PLUS = 42;
+  int NOT = 42;
   /** RegularExpression Id. */
-  int MINUS = 43;
+  int XOR = 43;
   /** RegularExpression Id. */
-  int MULTIPLY = 44;
+  int AND = 44;
   /** RegularExpression Id. */
-  int DIVIDE = 45;
+  int OR = 45;
   /** RegularExpression Id. */
-  int REM = 46;
+  int LPAREN = 46;
   /** RegularExpression Id. */
-  int BOOLEAN = 47;
+  int RPAREN = 47;
   /** RegularExpression Id. */
-  int NOT = 48;
+  int LBRACE = 48;
   /** RegularExpression Id. */
-  int XOR = 49;
+  int RBRACE = 49;
   /** RegularExpression Id. */
-  int AND = 50;
+  int LBRACKET = 50;
   /** RegularExpression Id. */
-  int OR = 51;
+  int RBRACKET = 51;
   /** RegularExpression Id. */
-  int LPAREN = 52;
+  int SEMICOLON = 52;
   /** RegularExpression Id. */
-  int RPAREN = 53;
+  int COMMA = 53;
   /** RegularExpression Id. */
-  int LBRACE = 54;
+  int SINGLEQUOTATIONMARKS = 54;
   /** RegularExpression Id. */
-  int RBRACE = 55;
+  int DOT = 55;
   /** RegularExpression Id. */
-  int LBRACKET = 56;
+  int COLON = 56;
   /** RegularExpression Id. */
-  int RBRACKET = 57;
+  int number_constant = 57;
   /** RegularExpression Id. */
-  int SEMICOLON = 58;
+  int int_literal = 58;
   /** RegularExpression Id. */
-  int COMMA = 59;
+  int float_literal = 59;
   /** RegularExpression Id. */
-  int SINGLEQUOTATIONMARKS = 60;
+  int string_constant = 60;
   /** RegularExpression Id. */
-  int DOT = 61;
+  int null_constant = 61;
   /** RegularExpression Id. */
-  int COLON = 62;
+  int CHARACTER = 62;
   /** RegularExpression Id. */
-  int int_constant = 63;
+  int EXPONENT = 63;
   /** RegularExpression Id. */
-  int string_constant = 64;
+  int boolean_constant = 64;
   /** RegularExpression Id. */
-  int null_constant = 65;
+  int IDENT = 65;
   /** RegularExpression Id. */
-  int int_literal = 66;
+  int LETTER = 66;
   /** RegularExpression Id. */
-  int float_literal = 67;
+  int DIGIT = 67;
   /** RegularExpression Id. */
-  int CHARACTER = 68;
+  int UNDERSCORE = 68;
   /** RegularExpression Id. */
-  int EXPONENT = 69;
+  int INVALID_LEXICAL = 69;
   /** RegularExpression Id. */
-  int IDENT = 70;
-  /** RegularExpression Id. */
-  int LETTER = 71;
-  /** RegularExpression Id. */
-  int INVALID_LEXICAL = 72;
-  /** RegularExpression Id. */
-  int INVALID_CONST = 73;
+  int INVALID_CONST = 70;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -172,13 +166,8 @@ public interface FunConstants {
     "\"int\"",
     "\"string\"",
     "\"char\"",
-    "\"double\"",
-    "\"byte\"",
-    "\"short\"",
-    "\"long\"",
     "\"float\"",
-    "<CONSTANT>",
-    "<DIGIT>",
+    "\"boolean\"",
     "\"=\"",
     "\">\"",
     "\"<\"",
@@ -191,11 +180,10 @@ public interface FunConstants {
     "\"*\"",
     "\"/\"",
     "\"%\"",
-    "<BOOLEAN>",
-    "\"not\"",
-    "\"xor\"",
-    "\"and\"",
-    "\"or\"",
+    "\"NOT\"",
+    "\"XOR\"",
+    "\"AND\"",
+    "\"OR\"",
     "\"(\"",
     "\")\"",
     "\"{\"",
@@ -207,15 +195,18 @@ public interface FunConstants {
     "\"\\\'\"",
     "\".\"",
     "\":\"",
-    "<int_constant>",
-    "<string_constant>",
-    "\"null\"",
+    "<number_constant>",
     "<int_literal>",
     "<float_literal>",
+    "<string_constant>",
+    "\"null\"",
     "<CHARACTER>",
     "<EXPONENT>",
+    "<boolean_constant>",
     "<IDENT>",
     "<LETTER>",
+    "<DIGIT>",
+    "\"_\"",
     "<INVALID_LEXICAL>",
     "<INVALID_CONST>",
   };
