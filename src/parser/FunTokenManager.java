@@ -3,6 +3,7 @@
 package parser;
 import java.io.FileNotFoundException;
 import java.io.FileInputStream;
+import recovery.*;
 
 /** Token Manager. */
 public class FunTokenManager implements FunConstants {

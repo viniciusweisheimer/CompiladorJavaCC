@@ -37,7 +37,7 @@ boolean debug_recovery;		// controla verbose de recuperacao de erros
 		for (i = 0; i < args.length -1; i++)
 		{
 		  if(args[i].equals("-debug_AS") )
-		  		debug = true;
+		  		debug_as = true;
 		  else
 		  	{
 		  	  	System.out.println("Utilizacao : " +
@@ -64,7 +64,7 @@ boolean debug_recovery;		// controla verbose de recuperacao de erros
 		 			}
 		}
 
-		if (!debug) parser.disable_tracing(); // desabilita verbose do AS
+		if (!debug_as) parser.disable_tracing(); // desabilita verbose do AS
 
 		try {
 		  		parser.program(); // chama o método para fazer análise
@@ -112,15 +112,15 @@ void consumeUntil(RecoverySet g, ParseException e, String met) throws ParseEOFEx
 
  	if(g==null) throw e; // se o conjunto e null, propaga a excecao
 
- 	tok - getToken(1); // pega token corrente
+ 	tok = getToken(1); // pega token corrente
  	while(!eof)		   // se nao chegou ao fim do arquivo
  	{
 		if(g.contains(tok.kind)) //achou um token do conjunto
 		{
 		  if(debug_recovery)
-		  	System.out.prinln("Found syncroninzing token: " +
+		  	System.out.println("Found syncroninzing token: " +
 		  						im(tok.kind));
-		 break.
+		 break;
 		}
 		if(debug_recovery)
 			System.out.println("Ignoring token: " + im(tok.kind));
@@ -362,7 +362,7 @@ RecoverySet f = Frist.classlist.union(g);
 }
 
 
-void classdecl(RecoverySet g) throes ParseEOFException :
+void classdecl(RecoverySet g) throws ParseEOFException :
 {
 }
 {
@@ -423,7 +423,7 @@ RecoverySet f1 = new RecoverySet(ASSIGN);
 try { 
 	lvalue(f1) [<ASSIGN> (alocexpression(g) | expression(g))]
 }
-catach (ParseException e)
+catch (ParseException e)
 {
   consumeUntil(g, e, "atribstat");
 }
@@ -449,31 +449,28 @@ void methoddecl():
 
 void methodbody(RecoverySet g) throws ParseEOFException :
 {
-RecoverySet f = new RecoverySet(RPAREN).union(g);
+	RecoverySet f = new RecoverySet(RPAREN).union(g);
 }
 {
-try { 
-    <LPAREN> paramlist(f) <RPAREN> statement(g)
-}
-catch (ParseException e)
-{
-  consumeUntil(g, e, "methodbody");
+	try {
+		<LPAREN> paramlist(f) <RPAREN> statement(g)
+	} catch(ParseException e) {
+		consumeUntil(g, e, "methodbody");
+	}
 }
 
-	
 void paramlist(RecoverySet g) throws ParseEOFException :
 {
 }
 {
-try { 
-   [ (<PRIMITIVE_TYPE> | <IDENT>) <IDENT> (<LBRACKET> <RBRACKET>)*
-    (<COMMA> (<PRIMITIVE_TYPE > | <IDENT>) <IDENT> (<LBRACKET> <RBRACKET>)* )*
-   ]
-}
-catch (ParseException e)
-{
-  consumeUntil(g, e, "paramlist");
-}
+	try {
+	   [
+	    (<PRIMITIVE_TYPE> | <IDENT>) <IDENT> (<LBRACKET> <RBRACKET>)*
+	    (<COMMA> (<PRIMITIVE_TYPE> | <IDENT>) <IDENT> (<LBRACKET> <RBRACKET>)* )*
+	   ]
+	} catch (ParseException e) {
+	   consumeUntil(g, e, "paramlist");
+	}
 }
 
 
@@ -534,8 +531,8 @@ void atribstat(RecoverySet g) throws ParseEOFException :
 {
 RecoverySet f1 = new RecoverySet(ASSIGN).union(g);
 }
-try { 
 {
+try { 
     lvalue(f1) <ASSIGN> ( alocexpression(g) | expression(g))
 }
 catch (ParseException e)
