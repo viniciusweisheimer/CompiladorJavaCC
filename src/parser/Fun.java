@@ -10,9 +10,10 @@ public class Fun implements FunConstants {
 final static String Version = "Fun Compiler - Version 1.0 - 2018";
 int contParseError = 0;         // contador de erros sintaticos
 boolean debug_recovery;         // controla verbose de recuperacao de erros
+Token lastError = null;
 
 // Define método "main" da classe Fun
-        public static void main(String args[])
+        public static void main(String args[]) throws ParseException
         {
         boolean debug_as = false;
         boolean debug_recovery = false;
@@ -54,12 +55,12 @@ boolean debug_recovery;         // controla verbose de recuperacao de erros
                                         }
                 }
 
+                parser.debug_recovery = debug_recovery;
                 if (!debug_as) parser.disable_tracing(); // desabilita verbose do AS
-
                 try {
                                 parser.program(); // chama o método para fazer análise
                 }
-                catch (ParseException e)
+                catch (ParseEOFException e)
                 {
                 System.err.println(e.getMessage());
                 //parser.contParseError = 1; // não existe recuperação de erros
@@ -89,7 +90,10 @@ boolean eof;    // variavel q indica se EOF foi alcancado
 // metodo abaixo consome tokens ate alcancar um que pertenca
 // ao conjunto de sincronizacao
 
-void consumeUntil(RecoverySet g, ParseException e, String met) throws ParseEOFException, ParseException
+void consumeUntil(RecoverySet g,
+                 ParseException e,
+                 String met) throws ParseEOFException,
+                                    ParseException
 {
   Token tok;
 
@@ -129,7 +133,7 @@ void consumeUntil(RecoverySet g, ParseException e, String met) throws ParseEOFEx
 }
 
   final public void program() throws ParseException, ParseEOFException {    try {
-RecoverySet g = Frist.program;
+RecoverySet g = First.program;
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case 0:{
         jj_consume_token(0);
@@ -165,8 +169,8 @@ consumeUntil(g, e, "program");
 }
 
   final public void classlist(RecoverySet g) throws ParseException, ParseEOFException {    try {
-RecoverySet f = Frist.classlist.union(g);
-      classdecl();
+RecoverySet f = First.classlist.union(g);
+      classdecl(f);
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case CLASS:{
         classlist(g);
@@ -207,9 +211,9 @@ consumeUntil(g, e, "classdecl");
 
   final public void classbody(RecoverySet g) throws ParseException, ParseEOFException {    try {
 RecoverySet f2 = new RecoverySet(SEMICOLON).union(g).remove(IDENT),
-                        f3 = First.methoddecl.union(g).remove(IDENT),
-                        f4 = First.constructdecl.union(f3).remove(IDENT),
-                        f5 = First.vardecl.union(f4).remove(IDENT);
+                    f3 = First.methoddecl.union(g).remove(IDENT),
+                    f4 = First.constructdecl.union(f3).remove(IDENT),
+                    f5 = First.vardecl.union(f4).remove(IDENT);
       try {
         jj_consume_token(LBRACE);
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -298,7 +302,7 @@ consumeUntil(g, e, "classbody");
           jj_consume_token(LBRACKET);
           jj_consume_token(RBRACKET);
         }
-        varinit();
+        varinit(g);
         label_5:
         while (true) {
           switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -311,7 +315,7 @@ consumeUntil(g, e, "classbody");
             break label_5;
           }
           jj_consume_token(COMMA);
-          varinit();
+          varinit(g);
         }
       } catch (ParseException e) {
 consumeUntil(g, e, "vardecl");
@@ -364,47 +368,55 @@ consumeUntil(g, e, "atribstat");
     }
 }
 
-  final public void constructdecl() throws ParseException {    try {
+  final public void constructdecl(RecoverySet g) throws ParseException, ParseEOFException {    try {
 
-      jj_consume_token(CONSTRUCTOR);
-      methodbody();
+      try {
+        jj_consume_token(CONSTRUCTOR);
+        methodbody(g);
+      } catch (ParseException e) {
+consumeUntil(g, e, "constructdecl");
+      }
     } finally {
       trace_return("constructdecl");
     }
 }
 
-  final public void methoddecl() throws ParseException {    try {
+  final public void methoddecl(RecoverySet g) throws ParseException, ParseEOFException {    try {
 
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case PRIMITIVE_TYPE:{
-        jj_consume_token(PRIMITIVE_TYPE);
-        break;
-        }
-      case IDENT:{
-        jj_consume_token(IDENT);
-        break;
-        }
-      default:
-        jj_la1[12] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
-      }
-      label_6:
-      while (true) {
+      try {
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-        case LBRACKET:{
-          ;
+        case PRIMITIVE_TYPE:{
+          jj_consume_token(PRIMITIVE_TYPE);
+          break;
+          }
+        case IDENT:{
+          jj_consume_token(IDENT);
           break;
           }
         default:
-          jj_la1[13] = jj_gen;
-          break label_6;
+          jj_la1[12] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
         }
-        jj_consume_token(LBRACKET);
-        jj_consume_token(RBRACKET);
+        label_6:
+        while (true) {
+          switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+          case LBRACKET:{
+            ;
+            break;
+            }
+          default:
+            jj_la1[13] = jj_gen;
+            break label_6;
+          }
+          jj_consume_token(LBRACKET);
+          jj_consume_token(RBRACKET);
+        }
+        jj_consume_token(IDENT);
+        methodbody(g);
+      } catch (ParseException e) {
+consumeUntil(g, e, "methoddecl");
       }
-      jj_consume_token(IDENT);
-      methodbody();
     } finally {
       trace_return("methoddecl");
     }
@@ -587,26 +599,30 @@ consumeUntil(g, e, "statement");
     }
 }
 
-  final public void methodcall() throws ParseException {    try {
-
-      jj_consume_token(IDENT);
-      label_10:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-        case DOT:{
-          ;
-          break;
-          }
-        default:
-          jj_la1[21] = jj_gen;
-          break label_10;
-        }
-        jj_consume_token(DOT);
+  final public void methodcall(RecoverySet g) throws ParseException, ParseEOFException {    try {
+RecoverySet f1 = new RecoverySet(RPAREN).union(g);
+      try {
         jj_consume_token(IDENT);
+        label_10:
+        while (true) {
+          switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+          case DOT:{
+            ;
+            break;
+            }
+          default:
+            jj_la1[21] = jj_gen;
+            break label_10;
+          }
+          jj_consume_token(DOT);
+          jj_consume_token(IDENT);
+        }
+        jj_consume_token(LPAREN);
+        arglist(f1);
+        jj_consume_token(RPAREN);
+      } catch (ParseException e) {
+consumeUntil(g, e, "methodcall");
       }
-      jj_consume_token(LPAREN);
-      arglist();
-      jj_consume_token(RPAREN);
     } finally {
       trace_return("methodcall");
     }
@@ -851,7 +867,7 @@ consumeUntil(g, e, "forstat");
 }
 
   final public void statlist(RecoverySet g) throws ParseException, ParseEOFException {    try {
-RecoverySet f = Frist.statlist.remove(IDENT).union(g);
+RecoverySet f = First.statlist.remove(IDENT).union(g);
       statement(f);
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case BREAK:
@@ -1011,7 +1027,7 @@ RecoverySet f1 = new RecoverySet(RPAREN).union(g),
             jj_consume_token(-1);
             throw new ParseException();
           }
-          expression();
+          expression(g);
           break;
           }
         default:
@@ -1026,7 +1042,7 @@ consumeUntil(g, e, "expression");
     }
 }
 
-  final public void numexpr() throws ParseException {    try {
+  final public void numexpr() throws ParseException, ParseEOFException {    try {
 
       term();
       label_13:
@@ -1062,7 +1078,7 @@ consumeUntil(g, e, "expression");
     }
 }
 
-  final public void term() throws ParseException {    try {
+  final public void term() throws ParseException, ParseEOFException {    try {
 
       unaryexpr();
       label_14:
@@ -1103,7 +1119,7 @@ consumeUntil(g, e, "expression");
     }
 }
 
-  final public void unaryexpr() throws ParseException {    try {
+  final public void unaryexpr() throws ParseException, ParseEOFException {    try {
 
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case PLUS:
@@ -1134,7 +1150,7 @@ consumeUntil(g, e, "expression");
     }
 }
 
-  final public void factor() throws ParseException {    try {
+  final public void factor() throws ParseException, ParseEOFException {    try {
 
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case number_constant:{
@@ -1154,12 +1170,12 @@ consumeUntil(g, e, "expression");
         break;
         }
       case IDENT:{
-        lvalue();
+        lvalue(null);
         break;
         }
       case LPAREN:{
         jj_consume_token(LPAREN);
-        expression();
+        expression(null);
         jj_consume_token(RPAREN);
         break;
         }
@@ -1198,7 +1214,7 @@ RecoverySet f = new RecoverySet(COMMA).union(g);
             break label_15;
           }
           jj_consume_token(COMMA);
-          expression();
+          expression(f);
         }
         break;
         }
@@ -1235,23 +1251,26 @@ RecoverySet f = new RecoverySet(COMMA).union(g);
     finally { jj_save(2, xla); }
   }
 
-  private boolean jj_3R_19()
+  private boolean jj_3R_24()
  {
-    if (jj_scan_token(COMMA)) return true;
+    if (jj_scan_token(DOT)) return true;
     return false;
   }
 
-  private boolean jj_3R_17()
+  private boolean jj_3R_23()
  {
     if (jj_scan_token(LBRACKET)) return true;
-    if (jj_scan_token(RBRACKET)) return true;
     return false;
   }
 
-  private boolean jj_3_1()
+  private boolean jj_3R_22()
  {
-    if (jj_3R_16()) return true;
-    if (jj_scan_token(SEMICOLON)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_23()) {
+    jj_scanpos = xsp;
+    if (jj_3R_24()) return true;
+    }
     return false;
   }
 
@@ -1276,23 +1295,11 @@ RecoverySet f = new RecoverySet(COMMA).union(g);
     { if (!jj_rescan) trace_return("vardecl(LOOKAHEAD SUCCEEDED)"); return false; }
   }
 
-  private boolean jj_3_2()
+  private boolean jj_3_3()
  {
     if (jj_scan_token(IDENT)) return true;
-    if (jj_scan_token(IDENT)) return true;
+    if (jj_scan_token(LPAREN)) return true;
     return false;
-  }
-
-  private boolean jj_3R_20()
- {
-    if (!jj_rescan) trace_call("lvalue(LOOKING AHEAD...)");
-    if (jj_scan_token(IDENT)) { if (!jj_rescan) trace_return("lvalue(LOOKAHEAD FAILED)"); return true; }
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_22()) { jj_scanpos = xsp; break; }
-    }
-    { if (!jj_rescan) trace_return("lvalue(LOOKAHEAD SUCCEEDED)"); return false; }
   }
 
   private boolean jj_3R_18()
@@ -1311,33 +1318,42 @@ RecoverySet f = new RecoverySet(COMMA).union(g);
     return false;
   }
 
-  private boolean jj_3R_24()
+  private boolean jj_3_1()
  {
-    if (jj_scan_token(DOT)) return true;
+    if (jj_3R_16()) return true;
+    if (jj_scan_token(SEMICOLON)) return true;
     return false;
   }
 
-  private boolean jj_3R_23()
+  private boolean jj_3R_20()
  {
-    if (jj_scan_token(LBRACKET)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_22()
- {
+    if (!jj_rescan) trace_call("lvalue(LOOKING AHEAD...)");
+    if (jj_scan_token(IDENT)) { if (!jj_rescan) trace_return("lvalue(LOOKAHEAD FAILED)"); return true; }
     Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_23()) {
-    jj_scanpos = xsp;
-    if (jj_3R_24()) return true;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_22()) { jj_scanpos = xsp; break; }
     }
-    return false;
+    { if (!jj_rescan) trace_return("lvalue(LOOKAHEAD SUCCEEDED)"); return false; }
   }
 
-  private boolean jj_3_3()
+  private boolean jj_3_2()
  {
     if (jj_scan_token(IDENT)) return true;
-    if (jj_scan_token(LPAREN)) return true;
+    if (jj_scan_token(IDENT)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_19()
+ {
+    if (jj_scan_token(COMMA)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_17()
+ {
+    if (jj_scan_token(LBRACKET)) return true;
+    if (jj_scan_token(RBRACKET)) return true;
     return false;
   }
 

@@ -1,4 +1,4 @@
-public class SuccessClass extends ErrorClass{
+class SuccessClass extends ErrorClass{
 	
 	/* Declaracao variaveis, usando tipos e
 	* reconhecimento de comentários multiline
@@ -31,7 +31,7 @@ public class SuccessClass extends ErrorClass{
 	}
 	
 	public int funcao (){
-		
+		int i;
 		for(int i = 0, i<5, i++) {
 			if(intGlobal <= i){
 				if(intGlobal != i){
