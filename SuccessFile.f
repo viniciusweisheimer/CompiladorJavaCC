@@ -1,20 +1,21 @@
 class SuccessClass extends ErrorClass{
 	
 	/* Declaracao variaveis, usando tipos e
-	* reconhecimento de coment√°rios multiline
+	* reconhecimento de coment·rios multiline
 	* int
 	* float
 	* string
 	* char
 	* boolean
 	*/
-	int inteiroGlobal = 1;
+
+	int teste = 1;
 	string stringGlobal = "string";
-	char caracterGlobal = "a";
-	boolean booleanoGlobal = true;
-	float floatGlobal = 0.10;
+	char caracterGlobal = a;
+	boolean booleanoGlobal = "true";
+	float floatGlobal = 1.10;
 	
-	
+		
 	// Construtor com XOR,NOT,AND,OR e comentario singleline
 	constructor(boolean paramBool, int paramInt){
 		Success success = new Success();
@@ -23,33 +24,31 @@ class SuccessClass extends ErrorClass{
 		boolean resultBoolean = paramBool XOR outroBoleano AND paramBool;
 	}
 	
-	public int init () {
+	int init () {
 		int i = -1;
-		float floatInterno = -2.10;
+		//float floatInterno = -2.10;
 		
 		return i;
 	}
 	
-	public int funcao (){
+	int funcao (){
 		int i;
-		for(int i = 0, i<5, i++) {
+		for(i = 0; i<5; i = i+1) {
 			if(intGlobal <= i){
 				if(intGlobal != i){
 					i = i*i;
 					i = i/1;
 					i = i%2;
 					int const = null;
-					i--;
+					i = i-1;
 				}
 				break;
 			} else {
-				i++;
+				i = i+1;
 			}
 		}
-		byte teclado = (byte) System.in.read();
-		System.out.print("oi");
-		
-		
+		print("oi");
+	
 		return i;
 	}
 	

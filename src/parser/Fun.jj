@@ -419,11 +419,10 @@ catch (ParseException e)
 
 void varinit(RecoverySet g) throws ParseEOFException :
 {
-RecoverySet f1 = new RecoverySet(ASSIGN);
 }
 {
 try { 
-	lvalue(f1) [<ASSIGN> (alocexpression(g) | expression(g))]
+	lvalue(g) [<ASSIGN> (alocexpression(g) | expression(g))]
 }
 catch (ParseException e)
 {
@@ -484,31 +483,54 @@ void paramlist(RecoverySet g) throws ParseEOFException :
 }
 
 
+//void statement(RecoverySet g) throws ParseEOFException :
+//{
+//RecoverySet f1 = new RecoverySet(SEMICOLON).union(g).remove(IDENT);
+//RecoverySet f2 = new RecoverySet(RBRACE).union(g).remove(IDENT); 
+//}
+//{
+//try { 
+//    LOOKAHEAD(<IDENT> <IDENT>)
+//    vardecl(f1) <SEMICOLON>
+//  |	LOOKAHEAD(1)
+//  	atribstat(f1) <SEMICOLON>
+//  |	printstat(f1) <SEMICOLON>
+//  |	readstat(f1) <SEMICOLON>
+//  |	returnstat(f1) <SEMICOLON>
+//  |	superstat(f1) <SEMICOLON>
+//  |	ifstat(g)
+//  | forstat(g)
+//  |	<LBRACE> statlist(f2) <RBRACE>
+//  |	<BREAK> <SEMICOLON>
+//  |	<SEMICOLON>
+//}
+//catch (ParseException e)
+//{
+//  consumeUntil(g, e, "statement");
+//}
+//}
 void statement(RecoverySet g) throws ParseEOFException :
 {
-RecoverySet f1 = new RecoverySet(SEMICOLON).union(g).remove(IDENT);
-RecoverySet f2 = new RecoverySet(RBRACE).union(g).remove(IDENT); 
+	RecoverySet f1 = new RecoverySet(SEMICOLON).union(g).remove(IDENT),
+				f2 = new RecoverySet(RBRACE).union(g).remove(IDENT);
 }
 {
-try { 
-    LOOKAHEAD(<IDENT> <IDENT>)
-    vardecl(f1) <SEMICOLON>
-  |	LOOKAHEAD(1)
-  	atribstat(f1) <SEMICOLON>
-  |	printstat(f1) <SEMICOLON>
-  |	readstat(f1) <SEMICOLON>
-  |	returnstat(f1) <SEMICOLON>
-  |	superstat(f1) <SEMICOLON>
-  |	ifstat(g)
-  | forstat(g)
-  |	<LBRACE> statlist(f2) <RBRACE>
-  |	<BREAK> <SEMICOLON>
-  |	<SEMICOLON>
-}
-catch (ParseException e)
-{
-  consumeUntil(g, e, "statement");
-}
+	try {
+			LOOKAHEAD(3) vardecl(f1) <SEMICOLON>
+		|	LOOKAHEAD(4) methodcall(f1) <SEMICOLON>
+		|	LOOKAHEAD(3) atribstat(f1) <SEMICOLON>
+		|	printstat(f1) <SEMICOLON>
+		|	readstat(f1) <SEMICOLON>
+		|	returnstat(f1) <SEMICOLON>
+		|	superstat(f1) <SEMICOLON>
+		|	ifstat(g)
+		|	forstat(g)
+		|	<LBRACE> statlist(f2) <RBRACE>
+		|	<BREAK> <SEMICOLON>
+		|	<SEMICOLON>
+	} catch(ParseException e) {
+		consumeUntil(g, e, "statement");
+	}
 }
 
 
