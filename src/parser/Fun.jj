@@ -97,7 +97,15 @@ Token lastError = null;
 		  PrintTree prt = new PrintTree();
 		  prt.printRoot(root);	// chama método para imprimir arvore
 		}
-		
+		ClassCheck tc = new ClassCheck();
+		try {
+		  	tc.ClassCheckRoot(root);
+		  	System.out.println("0 Semantic error found");
+		 }
+		 catch (SemanticException e)
+		 {
+		   System.out.println(e.getMEssage());
+		 }
 	} //main
 
 static public String im(int x)
