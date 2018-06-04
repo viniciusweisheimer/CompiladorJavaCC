@@ -27,6 +27,7 @@ Token lastError = null;
 	{
 	boolean debug_as = false;
 	boolean debug_recovery = false;
+	boolean print_tree = false;
 	
 		String filename = "";
 		Fun parser;
@@ -37,12 +38,18 @@ Token lastError = null;
 		// lê os parâmetros passados para o compilador
 		for (i = 0; i < args.length -1; i++)
 		{
-		  if(args[i].equals("-debug_AS") )
+		  if(args[i].equals("-debug_AS"))
 		  		debug_as = true;
+		  else
+		  if(args[i].equals("-debug_recovery"))
+		  		debug_recovery = true;
+		  else
+		  if(args[i].equals("-print_tree")
+		  		print_tree = true;
 		  else
 		  	{
 		  	  	System.out.println("Utilizacao : " +
-		  	  						"java fun [-debug_AS] inputfile");
+		  	  						"java fun [-debug_AS] [-debug_recovery] [-print_tree] inputfile");
 		  	  	System.exit(0);
 		 	}
 		}
@@ -82,6 +89,15 @@ Token lastError = null;
 		  System.out.println(parser.contParseError +
 		  						"Syntatic Errors found");
 		  	}
+		
+		// verifica se pode imprimir a arvore sintatica
+		if(parser.token_source.foundLexError()
+			+ parser.contParseError == 0 && print_tree)
+		{
+		  PrintTree prt = new PrintTree();
+		  prt.printRoot(root);	// chama método para imprimir arvore
+		}
+		
 	} //main
 
 static public String im(int x)
