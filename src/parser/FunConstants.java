@@ -111,7 +111,7 @@ public interface FunConstants {
   /** RegularExpression Id. */
   int null_constant = 61;
   /** RegularExpression Id. */
-  int CHARACTER = 62;
+  int char_const = 62;
   /** RegularExpression Id. */
   int EXPONENT = 63;
   /** RegularExpression Id. */
@@ -200,7 +200,7 @@ public interface FunConstants {
     "<float_literal>",
     "<string_constant>",
     "\"null\"",
-    "<CHARACTER>",
+    "<char_const>",
     "<EXPONENT>",
     "<boolean_constant>",
     "<IDENT>",

@@ -6,6 +6,7 @@ import syntaticTree.*;
 public class ClassCheck {
 Symtable Maintable;				//table de mais alto nivel
 protected Symtable Curtable;	// apontador para a tabela corrente
+int foundSemanticError;			// contador de erros encontrados
 
 public ClassCheck()
 {
@@ -21,7 +22,7 @@ EntrySimple k;
 
 public void ClassCheckRoot(ListNode x) throws SemanticException
 {
-	Curtable = Maintable			// tabela corrente = principal
+	Curtable = Maintable;			// tabela corrente = principal
 	ClassCheckClassDeclListNode(x);	// chama analise para raiz da arvore
 	if (foundSemanticError != 0)	// se houve erro, lanca excecao
 		throw new SemanticException(foundSemanticError +
@@ -31,15 +32,7 @@ public void ClassCheckRoot(ListNode x) throws SemanticException
 public void ClassCheckClassDeclListNode(ListNode x)
 {
 	if (x == null) return;
-	try {
-		ClassCheckClassDeclNode((ClassDeclNode) x.node);
-	} catch (SemanticException e) 
-	{/* se um erro ocorreu na analise da classe,
-	 	* dá a mensagem, mas faz a analise para proxiuma classe
-	 	*/
-		System.out.println(e.getMessage());
-		foundSemanticError++;
-	}
+	ClassCheckClassDeclNode((ClassDeclNode) x.node);
 	ClassCheckClassDeclListNode(x.next);
 }
 
@@ -51,9 +44,16 @@ EntryClass nc;
 	if(x == null) return;
 	// procura classe na tabela
 	nc = (EntryClass) Curtable.classFindUp(x.name.image);
-	{
-		throw new SemanticException(x.name,
+	
+	try {
+		if (nc != null) // ja declarada, ERRO
+		{	
+			throw new SemanticException(x.name,
 				"Class "+ x.name.image + " already declared");
+		}
+	} catch (SemanticException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
 	}
 	
 	// inclui classe na tabela corrente
@@ -63,25 +63,6 @@ EntryClass nc;
 	Curtable = temphold;	// recupera apontador p/ tabela corrente
 }
 
-public EntryTable classFindUp(String x)
-{
-EntryTable p = top;
-
-	// para cada elemento da tabela corrente
-	while(p != null)
-	{
-		// verifica se e uma entrada de classe ou tipo simples
-		// e entao compara o nome
-		if( ((p instanceof EntryClass) || (p instanceof EntrySimple)) && p.name.equals(x))
-			return p;
-	}
-	if (levelup == null)	// se nao achou e e o nivel mais externo
-		return null;		
-	
-	// procura no nivel mais externo
-	return levelup.mytable.classFindUp(x);
-	
-}
 
 public void ClassCheckClassBodyNode(ClassBodyNode x)
 {

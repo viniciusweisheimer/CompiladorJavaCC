@@ -1,5 +1,7 @@
 package symtable;
 
+import syntaticTree.ClassBodyNode;
+
 public class Symtable {
 //  apontador para o topo da tabela (mais recente)
 public EntryTable top;
@@ -41,8 +43,27 @@ public void beginScope()
 public void endScope()
 {
 	while (top != null && top.scope == scptr)
-		top = top.next		// retira todas as vars do aninhamento corrente
+		top = top.next;		// retira todas as vars do aninhamento corrente
 	scptr--;				// finaliza aninhamento corrente
 }
 
+public EntryTable classFindUp(String x)
+{
+EntryTable p = top;
+
+	// para cada elemento da tabela corrente
+	while(p != null)
+	{
+		// verifica se e uma entrada de classe ou tipo simples
+		// e entao compara o nome
+		if( ((p instanceof EntryClass) || (p instanceof EntrySimple)) && p.name.equals(x))
+			return p;
+	}
+	if (levelup == null)	// se nao achou e e o nivel mais externo
+		return null;		
+	
+	// procura no nivel mais externo
+	return levelup.mytable.classFindUp(x);
+	
+}
 }
