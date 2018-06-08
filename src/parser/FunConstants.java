@@ -101,33 +101,31 @@ public interface FunConstants {
   /** RegularExpression Id. */
   int COLON = 56;
   /** RegularExpression Id. */
-  int number_constant = 57;
+  int int_literal = 57;
   /** RegularExpression Id. */
-  int int_literal = 58;
+  int float_literal = 58;
   /** RegularExpression Id. */
-  int float_literal = 59;
+  int string_constant = 59;
   /** RegularExpression Id. */
-  int string_constant = 60;
+  int null_constant = 60;
   /** RegularExpression Id. */
-  int null_constant = 61;
+  int char_const = 61;
   /** RegularExpression Id. */
-  int char_const = 62;
+  int EXPONENT = 62;
   /** RegularExpression Id. */
-  int EXPONENT = 63;
+  int boolean_constant = 63;
   /** RegularExpression Id. */
-  int boolean_constant = 64;
+  int IDENT = 64;
   /** RegularExpression Id. */
-  int IDENT = 65;
+  int LETTER = 65;
   /** RegularExpression Id. */
-  int LETTER = 66;
+  int DIGIT = 66;
   /** RegularExpression Id. */
-  int DIGIT = 67;
+  int UNDERSCORE = 67;
   /** RegularExpression Id. */
-  int UNDERSCORE = 68;
+  int INVALID_LEXICAL = 68;
   /** RegularExpression Id. */
-  int INVALID_LEXICAL = 69;
-  /** RegularExpression Id. */
-  int INVALID_CONST = 70;
+  int INVALID_CONST = 69;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -195,7 +193,6 @@ public interface FunConstants {
     "\"\\\'\"",
     "\".\"",
     "\":\"",
-    "<number_constant>",
     "<int_literal>",
     "<float_literal>",
     "<string_constant>",

@@ -3,12 +3,11 @@ package syntaticTree;
 import parser.*;
 
 public class VarInitNode extends VarNode {
-public ExpreNode expression, assignment;
+public ExpreNode assignment;
 
-public VarInitNode(ExpreNode t, ExpreNode e) 
+public VarInitNode(Token t, ExpreNode e) 
 {
-	super(t.position);
-	expression = t;
+	super(t);
 	assignment = e;
 }
 }

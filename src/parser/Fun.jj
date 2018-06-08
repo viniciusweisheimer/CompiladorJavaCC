@@ -292,12 +292,12 @@ TOKEN :
 /* Constantes da Linguagem */
 TOKEN:
 {
-  	< number_constant:(
-		<int_literal> |
-		<float_literal>
-	) >
-| < #int_literal: (["0"-"9"] (["0"-"9"])*) > // apenas numeros
-| < #float_literal: ( ["0"-"9"] (["0"-"9"])* "." ["0"-"9"] (["0"-"9"])* ) > //numeros float com .
+//  	< number_constant:(
+//		<int_literal> |
+//		<float_literal>
+//	) >
+  < int_literal: (["0"-"9"] (["0"-"9"])*) > // apenas numeros
+| < float_literal: ( ["0"-"9"] (["0"-"9"])* "." ["0"-"9"] (["0"-"9"])* ) > //numeros float com .
 | < string_constant: //"constante string como "abcd"
   		"\""( ~["\"","\n","\r"])* "\"" >
 
@@ -444,21 +444,101 @@ Token t = null;
 				 else
 				 	v.add(vd);
 				}
-			)*
-			(cd = constructdecl(f4)
+			)* 
+
+			// (a)* != (a)
+			// ( ((a)*) + ((a)?) + ((a)?) + ((a)*))			(			  (
+			  cd = constructdecl(f4)
 				{if (ct == null)
 					ct = new ListNode(cd);
-				 else
-				 	ct.add(cd);
+					else
+					ct.add(cd);
 				}
 			)*
-			(md = methoddecl(f3)
+			
+			|
+						(
+			  cd = constructdecl(f4)
+				{if (ct == null)
+					ct = new ListNode(cd);
+					else
+					ct.add(cd);
+				}
+			)?
+
+			|
+			(
+			  cd = constructdecl(f4)
+				{if (ct == null)
+					ct = new ListNode(cd);
+					else
+					ct.add(cd);
+				}
+			)?
+			
+			|
+			
+			(
+			  cd = constructdecl(f4)
+				{if (ct == null)
+					ct = new ListNode(cd);
+					else
+					ct.add(cd);
+				}
+			)*
+			)	 
+			(
+			  md = methoddecl(f3)
 				{if (m == null)
 					m = new ListNode(md);
-				 else
-				 	m.add(md);
+				else
+					 m.add(md);
 				}
 			)*
+			// (a+b)* != (a+b)
+			// ( ((a)*) + ((a)?) + ((a)?) + ((a)*))
+			(
+			  (
+			  cd = constructdecl(f4)
+				{if (ct == null)
+					ct = new ListNode(cd);
+					else
+					ct.add(cd);
+				}
+			)*
+			
+			|
+			
+			(
+			  cd = constructdecl(f4)
+				{if (ct == null)
+					ct = new ListNode(cd);
+					else
+					ct.add(cd);
+				}
+			)?
+
+			|
+			(
+			  cd = constructdecl(f4)
+				{if (ct == null)
+					ct = new ListNode(cd);
+					else
+					ct.add(cd);
+				}
+			)?
+			
+			|
+			
+			(
+			  cd = constructdecl(f4)
+				{if (ct == null)
+					ct = new ListNode(cd);
+					else
+					ct.add(cd);
+				}
+			)*
+			)
 		<RBRACE>
 		{ return new ClassBodyNode(t, c, v, ct, m); }
 	} catch(ParseException e) {
@@ -467,35 +547,9 @@ Token t = null;
 	}
 }
 
-
-//VarDeclNode vardecl(RecoverySet g) throws ParseEOFException :
-//{
-//Token t1 = null, t2 = null;
-//VarInitNode vi = null;
-//ListNode l = null;
-//int k = 0;
-//}
-//{
-//try { 
-//  (t1 = <PRIMITIVE_TYPE> | t1 = <IDENT>)
-//  t2 = <IDENT> (<LBRACKET><RBRACKET> { k++; })* vi = varinit(g)
-//  {
-//
-//     l = new ListNode(new VarNode(t2,k)); }
-//  (<COMMA> { k = 0; } t2 = <IDENT> (<LBRACKET><RBRACKET> {k++;})
-//  	{ l.add(new VarNode(t2, k)); }
-//  )*
-//  { return new VarDeclNode(t1, l); }
-//}
-//catch (ParseException e)
-//{
-//  consumeUntil(g, e, "vardecl");
-//  return new VarDeclNode(t1, l)
-//}
-//}
 VarDeclNode vardecl(RecoverySet g) throws ParseEOFException :
 {
-Token t = null, t1 = null;
+Token t = null;
 VarInitNode vi = null;
 ListNode l = null;
 int k = 0;
@@ -507,10 +561,6 @@ int k = 0;
 	  (<LBRACKET> <RBRACKET> { k++; })* vi = varinit(g)
 	  {
 	    vi.dim  = k;
-	    if(t1 != null)
-	    {
-	      t = t1;
-	  	}
 	  	l = new ListNode(vi);
 	  }
 	  (	    < COMMA > vi = varinit(g)
@@ -525,11 +575,12 @@ int k = 0;
 
 VarInitNode varinit(RecoverySet g) throws ParseEOFException :
 {
-ExpreNode e1, e2 = null;
+Token t;
+ExpreNode e = null;
 }
 {
-	e1 = lvalue(g) [<ASSIGN> (e2 = alocexpression(g) | e2 = expression(g))]
-	{ return new VarInitNode(e1, e2); }
+	t = <IDENT> [<ASSIGN> (e = alocexpression(g) | e = expression(g))]
+	{ return new VarInitNode(t, e); }
 }
 
 
@@ -633,7 +684,7 @@ RecoverySet f1 = new RecoverySet(SEMICOLON).union(g).remove(IDENT),
 	try {
 	(
 			LOOKAHEAD(3) s = vardecl(f1) <SEMICOLON>
-		|	LOOKAHEAD(4) methodcall(f1) <SEMICOLON>
+		|	LOOKAHEAD(4) s = methodcall(f1) <SEMICOLON>
 		|	LOOKAHEAD(3) s = atribstat(f1) <SEMICOLON>
 		|	s = printstat(f1) <SEMICOLON>
 		|	s = readstat(f1) <SEMICOLON>
@@ -641,9 +692,9 @@ RecoverySet f1 = new RecoverySet(SEMICOLON).union(g).remove(IDENT),
 		|	s = superstat(f1) <SEMICOLON>
 		|	s = ifstat(g)
 		|	s = forstat(g)
-		|	t1 = <LBRACE> l= statlist(f2) <RBRACE> { s = new BlockNode(t1, l); }
 		|	t1 = <BREAK> <SEMICOLON> {  s = new BreakNode(t1); }
-		|	<SEMICOLON> {  s = new NopNode(t1); }
+		|	t1 = <LBRACE> l= statlist(f2) <RBRACE> { s = new BlockNode(t1, l); }
+		|	t1 = <SEMICOLON> {  s = new NopNode(t1); }
 	) { return s; }
 	} catch(ParseException e) {
 		consumeUntil(g, e, "statement");
@@ -661,7 +712,8 @@ StatementNode methodcall(RecoverySet g) throws ParseEOFException:
   RecoverySet f1 = new RecoverySet(RPAREN).union(g);
 }
 {
-try { 
+try {
+  	 [(<SUPER>) <DOT>]
 	 t2 = <IDENT>
 	 [<DOT> { t1 = t2; } t2 = <IDENT> ]
   	 (<DOT> { t1 = t2; } t2 = <IDENT> )* <LPAREN> l = arglist(f1) <RPAREN>
@@ -981,15 +1033,17 @@ Token t = null;
 ExpreNode factor() throws ParseEOFException :
 {
 ExpreNode e = null;
-Token t = null;
+Token t;
 }
 {
     (
-       t = <number_constant> { e = new IntConstNode(t); }
+       t = <int_literal> { e = new IntConstNode(t); }
+       |
+       t = <float_literal> { e = new FloatConstNode(t); } 
        |
        t = <string_constant> { e = new StringConstNode(t); }
        |
-       t = < char_const > { e = new CharConstNode(t); }
+       t = <char_const > { e = new CharConstNode(t); }
        |  
        t = <null_constant> { e = new NullConstNode(t); }
        |
