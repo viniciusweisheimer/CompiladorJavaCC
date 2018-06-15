@@ -23,4 +23,8 @@ public EntryMethod(String n, EntryTable p, int d, EntryRec r)
 	fake = false;
 	hassuper = false;
 }
+
+public EntryMethod(String string, EntryClass levelup, boolean b) {
+	// TODO Auto-generated constructor stub
+}
 }

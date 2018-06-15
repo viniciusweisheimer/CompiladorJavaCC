@@ -22,14 +22,14 @@ EntrySimple k;
 
 public void ClassCheckRoot(ListNode x) throws SemanticException
 {
-	Curtable = Maintable;			// tabela corrente = principal
-	ClassCheckClassDeclListNode(x);	// chama analise para raiz da arvore
-	if (foundSemanticError != 0)	// se houve erro, lanca excecao
+	Curtable = Maintable;				// tabela corrente = principal
+	ClassCheckClassDeclListNode(x);		// chama analise para raiz da arvore
+	if (foundSemanticError != 0)		// se houve erro, lanca excecao
 		throw new SemanticException(foundSemanticError +
 				" Erro semantico encontrado (fase 1)");
 }
 
-public void ClassCheckClassDeclListNode(ListNode x)
+public void ClassCheckClassDeclListNode(ListNode x) throws SemanticException
 {
 	if (x == null) return;
 	ClassCheckClassDeclNode((ClassDeclNode) x.node);
@@ -49,11 +49,11 @@ EntryClass nc;
 		if (nc != null) // ja declarada, ERRO
 		{	
 			throw new SemanticException(x.name,
-				"Class "+ x.name.image + " already declared");
+				"Class "+ x.name.image + " ja declarada");
 		}
 	} catch (SemanticException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+		System.out.println(x.name +
+				"Class "+ x.name.image + " ja declarada");
 	}
 	
 	// inclui classe na tabela corrente
@@ -67,6 +67,10 @@ EntryClass nc;
 public void ClassCheckClassBodyNode(ClassBodyNode x)
 {
 	if(x == null) return;
-	ClassCheckClassDeclListNode(x.clist);
+	try {
+		ClassCheckClassDeclListNode(x.clist);
+	} catch (SemanticException e) {
+		System.out.println(e.getMessage());
+	}
 }
 }
