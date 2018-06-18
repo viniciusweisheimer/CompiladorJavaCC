@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import recovery.*; // classes de recuperacao
 import syntaticTree.*;
 import semananalysis.*;
-import symtable.*;
+
 
 public class Fun implements FunConstants {
 final static String Version = "Fun Compiler - Semantic - Version 1.0 - 2018";
@@ -73,7 +73,7 @@ Token lastError = null;
                 catch (ParseEOFException e)
                 {
                 System.err.println(e.getMessage());
-                //parser.contParseError = 1; // não existe recuperação de erros
+                        System.err.println(e.getMessage());
                 }
                 finally {
                   System.out.println(parser.token_source.foundLexError() +
@@ -89,9 +89,9 @@ Token lastError = null;
                   PrintTree prt = new PrintTree();
                   prt.printRoot(root);  // chama método para imprimir arvore
                 }
-                ClassCheck tc = new ClassCheck();
+                TypeCheck tc = new TypeCheck();
                 try {
-                        tc.ClassCheckRoot(root);
+                        tc.TypeCheckRoot(root);
                         System.out.println("0 Semantic error found");
                  }
                  catch (SemanticException e)

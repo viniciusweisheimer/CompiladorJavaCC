@@ -7,7 +7,6 @@ import recovery.*;
                    // classes de recuperacao
 import syntaticTree.*;
 import semananalysis.*;
-import symtable.*;
 
 /** Token Manager. */
 public class FunTokenManager implements FunConstants {

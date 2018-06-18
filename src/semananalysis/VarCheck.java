@@ -105,8 +105,8 @@ public void VarCheckVarDeclNode(VarDeclNode x)  throws SemanticException
 	// para cada variavel da declaracao, cria uma entrada na tabela
 	for(p = x.vars; p != null; p = p.next)
 	{
-		VarNode = (VarNode) p.node;
-		Curtable.add(new EntryVar(q.position.image, c, q, dim));
+		VarNode q = (VarNode) p.node;
+		Curtable.add(new EntryVar(q.position.image, c, q.dim));
 	}
 }
 
@@ -173,34 +173,6 @@ int n;
 					" ja declarado");		
 }
 
-public EntryMethod methodFindInclass(String x, EntryRec r)
-{
-EntryTable p = top;
-EntryClass q;
-
-	// para cada entrada da tabela
-	while(p != null)
-	{
-		// verifica se tipo é EntryMethod e compara o nome
-		if(p instanceof EntryMethod && p.name.equals(x))
-		{
-			EntryMethod t = (EntryMethod) p;
-			// compara os parametros
-			if(t.param == null)
-			{
-				if(r == null)  return t;
-			}
-			else
-			{
-				if(t.param.equals(r))
-					return t;
-			}
-		}
-		p = p.next;		// proxima entrada
-	}
-	return null; // não achou
-}
-
 public void VarCheckMethodDeclListNode(ListNode x)
 {
 	if(x == null) return;
@@ -230,14 +202,16 @@ int n;
 	{
 		n++;
 		q = (VarDeclNode) p.node;	// q = no da declaracao do parametro	
-		
 		u = (VarNode) p.node;		// u = no com o nome e dimensao
+		
 		// acha a entrada na tabela do tipo
 		e = Curtable.classFindUp(q.position.image);
+	
 		// se nao achou, ERRO
 		if(e == null)
 			throw new SemanticException(q.position, "Class " +
 							q.position.image + " nao encontrada");
+		
 		// constroi lista de tipos dos parametros
 		r = new EntryRec(e, u.dim, n, r);
 		p = p.next;
@@ -258,7 +232,7 @@ int n;
 		c = new EntryMethod(x.name.image, e, x.dim, r);
 		Curtable.add(c);
 	}
-	else	// metodo jaz deifinido na mesma classe, ERRO
+	else	// metodo ja definido na mesma classe, ERRO
 		throw new SemanticException(x.position, "Method " +
 							x.name.image + "(" + (r == null? "" : r.toString())
 							+ ")" + " ja declarado");

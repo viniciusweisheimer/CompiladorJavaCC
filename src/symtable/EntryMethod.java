@@ -24,7 +24,23 @@ public EntryMethod(String n, EntryTable p, int d, EntryRec r)
 	hassuper = false;
 }
 
-public EntryMethod(String string, EntryClass levelup, boolean b) {
-	// TODO Auto-generated constructor stub
+public EntryMethod(String n, EntryClass p, boolean b) {
+	name = n;
+	type = p;
+	dim = 0;
+	param = null;
+	totallocals = 0;
+	totalstack = 0;
+	fake = b;
+	hassuper = false;
 }
+
+@Override
+public String dscJava() {
+	String s = strDim(dim);
+	s += type.dscJava();
+	
+	return s;
+}
+
 }

@@ -170,6 +170,6 @@ public EntryMethod methodFindInclass(String x, EntryRec r) {
         p = p.next; // prxima entrada
     }
 
-    return null; // no achou
+    return null; // nao achou
 }
 }

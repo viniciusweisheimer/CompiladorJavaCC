@@ -23,4 +23,12 @@ public EntryVar(String n, EntryTable p, int d, int k)
 	dim = d;			// numero de dimensoes
 	localcount = k;		// inclui tambem o numero sequencial
 }
+
+@Override
+public String dscJava() {
+	String s = strDim(dim);
+	s += type.dscJava();
+	
+	return s;
+}
 }
