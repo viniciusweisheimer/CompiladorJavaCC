@@ -1,5 +1,8 @@
 package semananalysis;
 
+import java.util.Arrays;
+import java.util.List;
+
 import symtable.*;
 import syntaticTree.*;
 
@@ -8,16 +11,25 @@ Symtable Maintable;				//table de mais alto nivel
 protected Symtable Curtable;	// apontador para a tabela corrente
 int foundSemanticError;			// contador de erros encontrados
 
-public ClassCheck()
-{
-EntrySimple k;
-	
+public ClassCheck() {
+	final List<String> types = Arrays.asList(
+		"int",
+		"string",
+		"boolean",
+		"byte",
+		"char",
+		"long",
+		"double",
+		"short",
+		"float");
+
+	Maintable = new Symtable(); // cria tabela principal
+
+	for(final String type : types) {
+		Maintable.add(new EntrySimple(type));
+	}
+
 	foundSemanticError = 0;
-	Maintable = new Symtable();		// cria tabela principal
-	k = new EntrySimple("int");		// insere tipos basicos da linguagem
-	Maintable.add(k);
-	k = new EntrySimple("string");
-	Maintable.add(k);
 }
 
 public void ClassCheckRoot(ListNode x) throws SemanticException
