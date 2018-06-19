@@ -611,7 +611,7 @@ public class TypeCheck extends VarCheck {
 		t1 = TypeCheckExpreNode(x.expr1);
 
 		if(FLOAT_TYPE.equals(t1.ty) && x.expr2 instanceof IntConstNode) {
-			t2 = TypeCheckShortConstNode((IntConstNode) x.expr2);
+			t2 = TypeCheckFloatConstNode((FloatConstNode) x.expr2);
 		} else {
 			t2 = TypeCheckExpreNode(x.expr2);
 		}
@@ -640,7 +640,7 @@ public class TypeCheck extends VarCheck {
 		if(t1 == t2) {
 			return true;
 		} else if(t2 == INT_TYPE) {
-			return t1 == FLOAT_TYPE || t1 == BYTE_TYPE;
+			return t1 == FLOAT_TYPE;
 		}
 
 		// verifica se so classes
@@ -898,7 +898,7 @@ public class TypeCheck extends VarCheck {
 		}
 
 		// se dimenso > 0 s pode comparar igualdade
-		if(op != langXConstants.EQ && op != langXConstants.NEQ &&
+		if(op != FunConstants.EQ && op != FunConstants.NEQ &&
 			t1.dim > 0) {
 			throw new SemanticException(x.position,
 				"Can not use " + x.position.image + " for arrays");
@@ -907,14 +907,14 @@ public class TypeCheck extends VarCheck {
 		// se dois so objetos do mesmo tipo pode comparar igualdade
 		// isso inclui 2 strings
 		if((isSubClass(t2.ty, t1.ty) || isSubClass(t1.ty, t2.ty)) &&
-			(op == langXConstants.NEQ || op == langXConstants.EQ)) {
+			(op == FunConstants.NEQ || op == FunConstants.EQ)) {
 			return new type(INT_TYPE, 0);
 		}
 
 		// se um objeto e outro null, pode comparar igualdade
 		if((t1.ty instanceof EntryClass && t2.ty == NULL_TYPE ||
 			t2.ty instanceof EntryClass && t1.ty == NULL_TYPE) &&
-			(op == langXConstants.NEQ || op == langXConstants.EQ)) {
+			(op == FunConstants.NEQ || op == FunConstants.EQ)) {
 			return new type(INT_TYPE, 0);
 		}
 
@@ -943,20 +943,16 @@ public class TypeCheck extends VarCheck {
 		if(t1.ty == STRING_TYPE && t2.ty == STRING_TYPE) {
 			return new type(STRING_TYPE, 0);
 		} else {
-			if(typeNot(t1.ty, INT_TYPE, DOUBLE_TYPE, SHORT_TYPE, FLOAT_TYPE)
-				|| typeNot(t2.ty, INT_TYPE, DOUBLE_TYPE, SHORT_TYPE, FLOAT_TYPE)) {
+			if(typeNot(t1.ty, INT_TYPE, FLOAT_TYPE)
+				|| typeNot(t2.ty, INT_TYPE, FLOAT_TYPE)) {
 				throw new SemanticException(x.position,
 					"Invalid types for " + x.position.image);
 			}
 
-			if(t1.ty == DOUBLE_TYPE || t2.ty == DOUBLE_TYPE) {
-				return new type(DOUBLE_TYPE, 0);
-			} else if(t1.ty == FLOAT_TYPE || t2.ty == FLOAT_TYPE) {
+			if(t1.ty == FLOAT_TYPE || t2.ty == FLOAT_TYPE) {
 				return new type(FLOAT_TYPE, 0);
 			} else if(t1.ty == INT_TYPE || t2.ty == INT_TYPE) {
 				return new type(INT_TYPE, 0);
-			} else if(t1.ty == SHORT_TYPE || t2.ty == SHORT_TYPE) {
-				return new type(SHORT_TYPE, 0);
 			}
 		}
 
@@ -982,22 +978,18 @@ public class TypeCheck extends VarCheck {
 				"Can not use " + x.position.image + " for arrays");
 		}
 
-		if(typeNot(t1.ty, INT_TYPE, DOUBLE_TYPE, SHORT_TYPE, FLOAT_TYPE)
-			|| typeNot(t2.ty, INT_TYPE, DOUBLE_TYPE, SHORT_TYPE, FLOAT_TYPE)) {
+		if(typeNot(t1.ty, INT_TYPE, FLOAT_TYPE)
+			|| typeNot(t2.ty, INT_TYPE, FLOAT_TYPE)) {
 			throw new SemanticException(x.position,
 				"Invalid types for " + x.position.image);
 		}
 
-		if(t1.ty == DOUBLE_TYPE || t2.ty == DOUBLE_TYPE) {
-			return new type(DOUBLE_TYPE, 0);
-		} else if(t1.ty == FLOAT_TYPE || t2.ty == FLOAT_TYPE) {
+
+		if(t1.ty == FLOAT_TYPE || t2.ty == FLOAT_TYPE) {
 			return new type(FLOAT_TYPE, 0);
 		} else if(t1.ty == INT_TYPE || t2.ty == INT_TYPE) {
 			return new type(INT_TYPE, 0);
-		} else if(t1.ty == SHORT_TYPE || t2.ty == SHORT_TYPE) {
-			return new type(SHORT_TYPE, 0);
 		}
-
 		throw new SemanticException(x.position,
 			"Invalid types for " + x.position.image);
 	}
@@ -1019,7 +1011,7 @@ public class TypeCheck extends VarCheck {
 		}
 
 		// s int aceito
-		if(typeNot(t.ty, INT_TYPE, DOUBLE_TYPE, FLOAT_TYPE, SHORT_TYPE)) {
+		if(typeNot(t.ty, INT_TYPE, FLOAT_TYPE)) {
 			throw new SemanticException(x.position,
 				"Incompatible type for unary " + x.position.image);
 		}
@@ -1027,24 +1019,14 @@ public class TypeCheck extends VarCheck {
 		return new type(INT_TYPE, 0);
 	}
 
-	public type TypeCheckConstNode(final ConstNode x) throws SemanticException {
+	public type TypeCheckConstNode(ConstNode x) throws SemanticException {
 		if(x == null) {
 			return null;
 		}
 
 		if(x instanceof IntConstNode) {
 			return TypeCheckIntConstNode((IntConstNode) x);
-		} else if(x instanceof OctalConstNode) {
-			return TypeCheckOctalConstNode((OctalConstNode) x);
-		} else if(x instanceof HexConstNode) {
-			return TypeCheckHexaConstNode((HexConstNode) x);
-		} else if(x instanceof BinnaryConstNode) {
-			return TypeCheckBinnaryConstNode((BinnaryConstNode) x);
-		} else if(x instanceof LongConstNode) {
-			return TypeCheckLongConstNode((LongConstNode) x);
-		} else if(x instanceof DoubleConstNode) {
-			return TypeCheckDoubleConstNode((DoubleConstNode) x);
-		} else if(x instanceof FloatConstNode) {
+		}else if(x instanceof FloatConstNode) {
 			return TypeCheckFloatConstNode((FloatConstNode) x);
 		} else if(x instanceof StringConstNode) {
 			return TypeCheckStringConstNode((StringConstNode) x);
@@ -1061,66 +1043,12 @@ public class TypeCheck extends VarCheck {
 
 	// -------------------------- Constante inteira ----------------------
 	public type TypeCheckIntConstNode(final IntConstNode x) throws SemanticException {
-		// tenta transformar imagem em nmero inteiro
+		// tenta transformar imagem em numero inteiro
 		try {
 			Integer.parseInt(x.position.image);
 			return new type(INT_TYPE, 0);
 		} catch(final NumberFormatException e1) {
 			throw new SemanticException(x.position, "Invalid int constant");
-		}
-	}
-
-	public type TypeCheckShortConstNode(final IntConstNode x) throws SemanticException {
-		try {
-			Short.parseShort(x.position.image);
-			return new type(SHORT_TYPE, 0);
-		} catch(final NumberFormatException e) { // se deu erro, formato e invlido (possivelmente fora dos limites)
-			throw new SemanticException(x.position, "Invalid short constant");
-		}
-	}
-
-	public type TypeCheckOctalConstNode(final OctalConstNode x) throws SemanticException {
-		try {
-			Integer.parseInt(x.position.image.replaceAll("\\D", ""), 8);
-			return new type(INT_TYPE, 0);
-		} catch(final NumberFormatException e) { // se deu erro, formato e invlido (possivelmente fora dos limites)
-			throw new SemanticException(x.position, "Invalid octal constant");
-		}
-	}
-
-	public type TypeCheckHexaConstNode(final HexConstNode x) throws SemanticException {
-		try {
-			Integer.parseInt(x.position.image.replaceAll("\\D", ""), 16);
-			return new type(INT_TYPE, 0);
-		} catch(final NumberFormatException e) { // se deu erro, formato e invlido (possivelmente fora dos limites)
-			throw new SemanticException(x.position, "Invalid hexa constant");
-		}
-	}
-
-	public type TypeCheckBinnaryConstNode(final BinnaryConstNode x) throws SemanticException {
-		try {
-			Integer.parseInt(x.position.image.replaceAll("\\D", ""), 2);
-			return new type(INT_TYPE, 0);
-		} catch(final NumberFormatException e) { // se deu erro, formato e invlido (possivelmente fora dos limites)
-			throw new SemanticException(x.position, "Invalid binnary constant");
-		}
-	}
-
-	public type TypeCheckLongConstNode(final LongConstNode x) throws SemanticException {
-		try {
-			Long.parseLong(x.position.image.replaceAll("\\D", ""));
-			return new type(LONG_TYPE, 0);
-		} catch(final NumberFormatException e) { // se deu erro, formato e invlido (possivelmente fora dos limites)
-			throw new SemanticException(x.position, "Invalid long constant");
-		}
-	}
-
-	public type TypeCheckDoubleConstNode(final DoubleConstNode x) throws SemanticException {
-		try {
-			Double.parseDouble(x.position.image.replaceAll("\\D", ""));
-			return new type(DOUBLE_TYPE, 0);
-		} catch(final NumberFormatException e) { // se deu erro, formato e invlido (possivelmente fora dos limites)
-			throw new SemanticException(x.position, "Invalid double constant");
 		}
 	}
 
@@ -1345,8 +1273,8 @@ public class TypeCheck extends VarCheck {
 		}
 
 		if(x.assignment != null) {
-			if(SHORT_TYPE.equals(p.type) && x.assignment instanceof IntConstNode) {
-				t = TypeCheckShortConstNode((IntConstNode) x.assignment);
+			if(FLOAT_TYPE.equals(p.type) && x.assignment instanceof IntConstNode) {
+				t = TypeCheckFloatConstNode((FloatConstNode) x.assignment);
 			} else {
 				t = TypeCheckExpreNode(x.assignment);
 			}
@@ -1410,12 +1338,12 @@ public class TypeCheck extends VarCheck {
 						"Invalid types for " + x.expr1.position.image);
 				}
 			} else {
-				if(typeNot(t1.ty, INT_TYPE, CHAR_TYPE, DOUBLE_TYPE, SHORT_TYPE, FLOAT_TYPE, LONG_TYPE, BYTE_TYPE)) {
+				if(typeNot(t1.ty, INT_TYPE, CHAR_TYPE, FLOAT_TYPE)) {
 					throw new SemanticException(x.expr1.position,
 						"Invalid types for " + x.expr1.position.image);
 				}
 
-				if(typeNot(t2.ty, INT_TYPE, CHAR_TYPE, DOUBLE_TYPE, SHORT_TYPE, FLOAT_TYPE, LONG_TYPE, BYTE_TYPE)) {
+				if(typeNot(t2.ty, INT_TYPE, CHAR_TYPE, FLOAT_TYPE)) {
 					throw new SemanticException(x.expr2.position,
 						"Invalid types for " + x.expr2.position.image);
 				}
@@ -1435,108 +1363,6 @@ public class TypeCheck extends VarCheck {
 		}
 
 		return new type(BOOLEAN_TYPE, 0);
-	}
-
-	public void TypeCheckSwitchNode(final SwitchNode x) throws SemanticException {
-		type t;
-
-		if(x == null) {
-			return;
-		}
-
-		try {
-			t = TypeCheckExpreNode(x.expr);
-
-			if(t.ty != INT_TYPE || t.dim != 0) {
-				throw new SemanticException(x.expr.position,
-					"Integer expression expected");
-			}
-		} catch(final SemanticException e) {
-			System.out.println(e.getMessage());
-			foundSemanticError++;
-		}
-
-		TypeCheckStatementListNode(x.stat);
-		TypeCheckStatementListNode(x.def);
-	}
-
-	public void TypeCheckSwitchCaseNode(final SwitchCaseNode x) throws SemanticException {
-		type t;
-
-		if(x == null) {
-			return;
-		}
-
-		try {
-			t = TypeCheckExpreNode(x.expr);
-
-			if(t.ty != INT_TYPE || t.dim != 0) {
-				throw new SemanticException(x.expr.position,
-					"Integer expression expected");
-			}
-		} catch(final SemanticException e) {
-			System.out.println(e.getMessage());
-			foundSemanticError++;
-		}
-
-		nesting++;
-		TypeCheckStatementListNode(x.stat);
-	}
-
-	public void TypeCheckDoWhileNode(final DoWhileNode x) throws SemanticException {
-		type t;
-
-		if(x == null) {
-			return;
-		}
-
-		try {
-			nesting++;
-			TypeCheckStatementNode(x.stat);
-		} catch(final SemanticException e) {
-			System.out.println(e.getMessage());
-			foundSemanticError++;
-		}
-
-		try {
-			t = TypeCheckExpreNode(x.expr);
-
-			if(t.ty != BOOLEAN_TYPE || t.dim != 0) {
-				throw new SemanticException(x.expr.position,
-					"Integer expression expected");
-			}
-		} catch(final SemanticException e) {
-			System.out.println(e.getMessage());
-			foundSemanticError++;
-		}
-	}
-
-	public void TypeCheckWhileNode(final WhileNode x) throws SemanticException {
-		type t;
-
-		if(x == null) {
-			return;
-		}
-
-		try {
-			t = TypeCheckExpreNode(x.expr);
-
-			if(t.ty != BOOLEAN_TYPE || t.dim != 0) {
-				throw new SemanticException(x.expr.position,
-					"Integer expression expected");
-			}
-		} catch(final SemanticException e) {
-			System.out.println(e.getMessage());
-			foundSemanticError++;
-		}
-
-		try {
-			nesting++;
-			TypeCheckStatementNode(x.stat);
-		} catch(final SemanticException e) {
-			System.out.println(e.getMessage());
-			foundSemanticError++;
-		}
 	}
 
 	// --------------------------- Expresso em geral --------------------------
@@ -1603,15 +1429,7 @@ public class TypeCheck extends VarCheck {
 			TypeCheckSuperNode((SuperNode) x);
 		} else if(x instanceof BreakNode) {
 			TypeCheckBreakNode((BreakNode) x);
-		} else if(x instanceof SwitchNode) {
-			TypeCheckSwitchNode((SwitchNode) x);
-		} else if(x instanceof SwitchCaseNode) {
-			TypeCheckSwitchCaseNode((SwitchCaseNode) x);
-		} else if(x instanceof DoWhileNode) {
-			TypeCheckDoWhileNode((DoWhileNode) x);
-		} else if(x instanceof WhileNode) {
-			TypeCheckWhileNode((WhileNode) x);
-		} else if(x instanceof MethodCallNode) {
+		}else if(x instanceof MethodCallNode) {
 			TypeCheckMethodCallNode((MethodCallNode) x);
 		}
 	}
