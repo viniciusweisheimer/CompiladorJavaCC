@@ -16,11 +16,7 @@ public ClassCheck() {
 		"int",
 		"string",
 		"boolean",
-		"byte",
 		"char",
-		"long",
-		"double",
-		"short",
 		"float");
 
 	Maintable = new Symtable(); // cria tabela principal

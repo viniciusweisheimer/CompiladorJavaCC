@@ -429,7 +429,7 @@ ConstructDeclNode cd;
 MethodDeclNode md;
 Token t = null;
 
-	RecoverySet f2 = new RecoverySet(SEMICOLON).union(g),
+	RecoverySet f2 = new RecoverySet(SEMICOLON).union(g).remove(IDENT),
 	            f3 = First.methoddecl.union(g).remove(IDENT),
 	            f4 = First.constructdecl.union(f3).remove(IDENT),
 	            f5 = First.vardecl.union(f4).remove(IDENT);
@@ -445,7 +445,6 @@ Token t = null;
 				 	v.add(vd);
 				}
 			)* 
-
 			// (a)* != (a)
 			// ( ((a)*) + ((a)?) + ((a)?) + ((a)*))			(			  (
 			  cd = constructdecl(f4)
@@ -713,7 +712,7 @@ StatementNode methodcall(RecoverySet g) throws ParseEOFException:
 }
 {
 try {
-  	 [(<SUPER>) <DOT>]
+  	 [ (<SUPER>) <DOT>]
 	 t2 = <IDENT>
 	 [<DOT> { t1 = t2; } t2 = <IDENT> ]
   	 (<DOT> { t1 = t2; } t2 = <IDENT> )* <LPAREN> l = arglist(f1) <RPAREN>

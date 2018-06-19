@@ -261,7 +261,7 @@ ConstructDeclNode cd;
 MethodDeclNode md;
 Token t = null;
 
-        RecoverySet f2 = new RecoverySet(SEMICOLON).union(g),
+        RecoverySet f2 = new RecoverySet(SEMICOLON).union(g).remove(IDENT),
                     f3 = First.methoddecl.union(g).remove(IDENT),
                     f4 = First.constructdecl.union(f3).remove(IDENT),
                     f5 = First.vardecl.union(f4).remove(IDENT);
@@ -1614,6 +1614,13 @@ l.add(e);
     return false;
   }
 
+  private boolean jj_3_1()
+ {
+    if (jj_3R_19()) return true;
+    if (jj_scan_token(SEMICOLON)) return true;
+    return false;
+  }
+
   private boolean jj_3R_47()
  {
     if (!jj_rescan) trace_call("unaryexpr(LOOKING AHEAD...)");
@@ -1622,13 +1629,6 @@ l.add(e);
     if (jj_3R_51()) jj_scanpos = xsp;
     if (jj_3R_52()) { if (!jj_rescan) trace_return("unaryexpr(LOOKAHEAD FAILED)"); return true; }
     { if (!jj_rescan) trace_return("unaryexpr(LOOKAHEAD SUCCEEDED)"); return false; }
-  }
-
-  private boolean jj_3_1()
- {
-    if (jj_3R_19()) return true;
-    if (jj_scan_token(SEMICOLON)) return true;
-    return false;
   }
 
   private boolean jj_3R_29()
