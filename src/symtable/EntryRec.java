@@ -1,6 +1,5 @@
 package symtable;
 
-
 // lista de EntryClass, usada para representar os tipos de uma lista
 // de parmetros
 public class EntryRec extends EntryTable {

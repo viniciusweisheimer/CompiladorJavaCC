@@ -1,6 +1,6 @@
 package symtable;
 
-import syntaticTree.ClassBodyNode;
+import syntacticTree.ClassBodyNode;
 
 public class Symtable {
 //  apontador para o topo da tabela (mais recente)

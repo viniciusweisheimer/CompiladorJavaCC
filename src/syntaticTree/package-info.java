@@ -1,8 +1,0 @@
-/**
- * 
- */
-/**
- * @author vinicius
- *
- */
-package syntaticTree;
