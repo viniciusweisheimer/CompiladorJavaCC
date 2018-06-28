@@ -169,30 +169,30 @@ public class TypeCheck extends VarCheck {
        
 
             
-            g = Curtable.varFind(q.position.image);
-
-            if ((q.expr1!=null) && (g!=null)) {
-               
-            		id_valor_atribuido=q.expr1.position.kind;           
-            		tipo_variavel=g.type.name;
-            	
-        	if (id_valor_atribuido==FunConstants.float_literal && tipo_variavel=="float") {
-        		 
-        	}	else if (id_valor_atribuido==FunConstants.boolean_constant && tipo_variavel=="boolean") {
-        		
-        	} else if (id_valor_atribuido==FunConstants.char_const && tipo_variavel=="char") {
-        		
-        	} else if (id_valor_atribuido==FunConstants.int_literal && tipo_variavel=="int") {
-        		
-        	} else if (id_valor_atribuido==FunConstants.string_constant && tipo_variavel=="string") {
-        		
-        	}	else {
-        		throw new SemanticException(q.position,
-                        "Tipo de variavel: "+tipo_variavel+ " n�o corresponde ao tipo do valor inicializado ");
-        	
-        	}
-          
-           }
+//            g = Curtable.varFind(q.position.image);
+//
+//            if ((q.expr1!=null) && (g!=null)) {
+//               
+//            		id_valor_atribuido=q.expr1.position.kind;           
+//            		tipo_variavel=g.type.name;
+//            	
+//        	if (id_valor_atribuido==FunConstants.float_literal && tipo_variavel=="float") {
+//        		 
+//        	}	else if (id_valor_atribuido==FunConstants.boolean_constant && tipo_variavel=="boolean") {
+//        		
+//        	} else if (id_valor_atribuido==FunConstants.char_const && tipo_variavel=="char") {
+//        		
+//        	} else if (id_valor_atribuido==FunConstants.int_literal && tipo_variavel=="int") {
+//        		
+//        	} else if (id_valor_atribuido==FunConstants.string_constant && tipo_variavel=="string") {
+//        		
+//        	}	else {
+//        		throw new SemanticException(q.position,
+//                        "Tipo de variavel: "+tipo_variavel+ " n�o corresponde ao tipo do valor inicializado ");
+//        	
+//        	}
+//          
+//           }
             
             type t1;
     		type t2;
