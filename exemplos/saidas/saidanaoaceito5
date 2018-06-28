@@ -1,0 +1,8 @@
+Version
+Lendo do arquivo exemplos/programanaoaceito5.f ...
+0Lexical Errors found
+0Syntatic Errors found
+Classe adicionada teste
+Line 4 column 6: Variable dia already declared
+Line 5 column 6: Variable dia already declared
+2 Semantic Errors found (phase 3)

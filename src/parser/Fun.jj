@@ -419,145 +419,15 @@ catch(ParseException e)
 }
 }
 
-
-//ClassBodyNode classbody(RecoverySet g) throws ParseEOFException :
-//{
-//ListNode c = null,
-//		 v = null,
-//		 ct = null,
-//		 m = null;
-//VarDeclNode vd;
-//ConstructDeclNode cd;
-//MethodDeclNode md;
-//Token t = null;
-//
-//	RecoverySet f2 = new RecoverySet(SEMICOLON).union(g).remove(IDENT),
-//	            f3 = First.methoddecl.union(g).remove(IDENT),
-//	            f4 = First.constructdecl.union(f3).remove(IDENT),
-//	            f5 = First.vardecl.union(f4).remove(IDENT);
-//}
-//{
-//	try {
-//		t = <LBRACE>
-//			[c = classlist(f5)]
-//			(LOOKAHEAD(3) vd = vardecl(f2) <SEMICOLON>
-//				{if (v == null)
-//					v = new ListNode(vd);
-//				 else
-//				 	v.add(vd);
-//				}
-//			)* 
-//			// (a)* != (a)
-//			// ( ((a)*) + ((a)?) + ((a)?) + ((a)*))
-//			(
-//			  (
-//			  cd = constructdecl(f4)
-//				{if (ct == null)
-//					ct = new ListNode(cd);
-//					else
-//					ct.add(cd);
-//				}
-//			)*
-//			
-//			|
-//			
-//			(
-//			  cd = constructdecl(f4)
-//				{if (ct == null)
-//					ct = new ListNode(cd);
-//					else
-//					ct.add(cd);
-//				}
-//			)?
-//
-//			|
-//			(
-//			  cd = constructdecl(f4)
-//				{if (ct == null)
-//					ct = new ListNode(cd);
-//					else
-//					ct.add(cd);
-//				}
-//			)?
-//			
-//			|
-//			
-//			(
-//			  cd = constructdecl(f4)
-//				{if (ct == null)
-//					ct = new ListNode(cd);
-//					else
-//					ct.add(cd);
-//				}
-//			)*
-//			)	 
-//			(
-//			  md = methoddecl(f3)
-//				{if (m == null)
-//					m = new ListNode(md);
-//				else
-//					 m.add(md);
-//				}
-//			)*
-//			// (a+b)* != (a+b)
-//			// ( ((a)*) + ((a)?) + ((a)?) + ((a)*))
-//			(
-//			  (
-//			  cd = constructdecl(f4)
-//				{if (ct == null)
-//					ct = new ListNode(cd);
-//					else
-//					ct.add(cd);
-//				}
-//			)*
-//			
-//			|
-//			
-//			(
-//			  cd = constructdecl(f4)
-//				{if (ct == null)
-//					ct = new ListNode(cd);
-//					else
-//					ct.add(cd);
-//				}
-//			)?
-//
-//			|
-//			(
-//			  cd = constructdecl(f4)
-//				{if (ct == null)
-//					ct = new ListNode(cd);
-//					else
-//					ct.add(cd);
-//				}
-//			)?
-//			
-//			|
-//			
-//			(
-//			  cd = constructdecl(f4)
-//				{if (ct == null)
-//					ct = new ListNode(cd);
-//					else
-//					ct.add(cd);
-//				}
-//			)*
-//			)
-//		<RBRACE>
-//		{ return new ClassBodyNode(t, c, v, ct, m); }
-//	} catch(ParseException e) {
-//		consumeUntil(g, e, "classbody");
-//		return new ClassBodyNode(t, c, v, ct, m);
-//	}
-//}
-
 ClassBodyNode classbody(RecoverySet g) throws ParseEOFException :
 {
 ListNode c = null, 
-         v = null, 
+         v = null,
+         as = null,
          ct = null, 
          m = null;
 VarDeclNode vd;
+AtribNode an;
 ConstructDeclNode cd;
 MethodDeclNode md;
 Token t = null;
@@ -578,7 +448,7 @@ try {
               v.add(vd);
         }
       )*
-      (cd = constructdecl(f4)
+      (        cd = constructdecl(f4)
         { if ( ct == null)
               ct = new ListNode(cd);
           else
@@ -628,17 +498,6 @@ catch (ParseException e)
 }
 }
 
-//VarInitNode varinit(RecoverySet g) throws ParseEOFException :
-//{
-//Token t;
-//ExpreNode e = null;
-//}
-//{
-//	t = <IDENT> [<ASSIGN> (e = alocexpression(g) | e = expression(g))]
-//	{ return new VarInitNode(t, e); }
-//}
-
-
 ConstructDeclNode constructdecl(RecoverySet g) throws ParseEOFException :
 {
 Token t = null;
@@ -658,13 +517,15 @@ MethodBodyNode m = null;
 MethodDeclNode methoddecl(RecoverySet g) throws ParseEOFException :
 {
 Token t1 = null,
-	  t2 = null;
+	  t2 = null,
+	  t3 = null;
 int k = 0;
+ExpreNode e1 = null;
 MethodBodyNode m = null;
 }
 {
 	try {
-		(t1 = <PRIMITIVE_TYPE> | t1 = <IDENT>)
+		(t1 = <PRIMITIVE_TYPE> | t1 = <IDENT>) 
 		(<LBRACKET> <RBRACKET> { k++; })*
 		t2 = <IDENT> m = methodbody(g)
 		{ return new MethodDeclNode(t1, k, t2, m); }
@@ -673,7 +534,6 @@ MethodBodyNode m = null;
 		return new MethodDeclNode(t1, k, t2, m); 
 	}
 }
-
 
 MethodBodyNode methodbody(RecoverySet g) throws ParseEOFException :
 {
@@ -694,37 +554,6 @@ RecoverySet f = new RecoverySet(RPAREN).union(g);
 	}
 }
 
-//ListNode paramlist(RecoverySet g) throws ParseEOFException :
-//{
-//ListNode p = null,
-//		 q = null;
-//Token t1 = null,
-//	  t2 = null;
-//int k = 0;
-//ExpreNode e1 = null;
-//}
-//{
-//	try {
-//	   [
-//	    (t1 = <PRIMITIVE_TYPE> | t1 = <IDENT>) t2 = <IDENT>
-//	    (<LBRACKET> <RBRACKET> { k++; } )*
-//		    {
-//		      q = new ListNode(new VarNode(t2, k));
-//			  p = new ListNode(new VarDeclNode(t1, q));
-//			}	   
-//	    (<COMMA> { k++; } (t1 = <PRIMITIVE_TYPE> | t1 = <IDENT>)
-//	    t2 = <IDENT> (<LBRACKET> <RBRACKET> { k++; } )*
-//			{
-//		  		q = new ListNode(new VarNode(t2, k));
-//		  		p.add(new VarDeclNode(t1, q));
-//			}
-//	    )*
-//	   ] { return p; }
-//	} catch (ParseException e) {
-//	   consumeUntil(g, e, "paramlist");
-//	   return null;
-//	}
-//}
 ListNode paramlist(RecoverySet g) throws ParseEOFException :
 {
 ListNode p = null, q = null, exp=null;
@@ -944,7 +773,7 @@ RecoverySet f1 = new RecoverySet(RPAREN).union(g),
 }
 {
 try { 
-	t = <IF> <LPAREN> e1 = expression(f1) <RPAREN> | e1 = expression(f1) s1 = statement(f2)
+	t = <IF> (<LPAREN> e1 = expression(f1) <RPAREN> | e1 = expression(f1)) s1 = statement(f2)
 	[LOOKAHEAD(1) <ELSE> s2 = statement(g)]
 	{ return new IfNode(t, e1, s1, s2); }
 }

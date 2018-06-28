@@ -1,0 +1,15 @@
+// Tipos invalidos para >
+class Teste{
+	
+	int getModelo (int ja, int a=22) {
+	int tipo;
+	int ano= 1999*consumo_eletrico;
+		if ( ano > a ){		
+
+			 ano = tipo = 432;
+
+		}
+		return tipo;
+	}
+	
+}

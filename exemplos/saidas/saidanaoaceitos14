@@ -1,0 +1,9 @@
+Version
+Lendo do arquivo exemplos/programanaoaceito14.f ...
+0Lexical Errors found
+0Syntatic Errors found
+Classe adicionada teste
+Classe adicionada Casa
+Line 9 column 7: Tipo de variavel: Casa n�o corresponde ao tipo do valor inicializado 
+Line 13 column 14: Method getModelo(int) not found in class Casa
+2 Semantic Errors found (phase 3)

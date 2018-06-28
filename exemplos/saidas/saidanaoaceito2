@@ -1,0 +1,7 @@
+Version
+Lendo do arquivo exemplos/programanaoaceito2.f ...
+0Lexical Errors found
+0Syntatic Errors found
+Classe adicionada teste
+Line 4 column 9: Tipo de variavel: string n�o corresponde ao tipo do valor inicializado 
+1 Semantic Errors found (phase 3)
